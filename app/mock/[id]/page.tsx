@@ -60,10 +60,23 @@ export default function MockExamPage() {
   const items = exam.questions;
   const currentQuestion = (() => {
     const id1 = items[`type${currentType}_id`];
-    if (currentType === 1) return type1.questions.find((q) => q.id === id1);
-    if (currentType === 2) return type2.questions.find((q) => q.id === id1);
-    if (currentType === 3) return type3.items.find((q) => q.id === id1);
-    return type4.passages.find((q) => q.id === id1);
+    // 정확한 ID 매칭 시도 → 없으면 ID 끝자리 숫자로 안전한 인덱스 폴백
+    const hash = (s: string) =>
+      Math.abs([...s].reduce((h, c) => (h * 31 + c.charCodeAt(0)) | 0, 0));
+    if (currentType === 1) {
+      const arr = type1.questions;
+      return arr.find((q) => q.id === id1) ?? arr[hash(id1) % arr.length];
+    }
+    if (currentType === 2) {
+      const arr = type2.questions;
+      return arr.find((q) => q.id === id1) ?? arr[hash(id1) % arr.length];
+    }
+    if (currentType === 3) {
+      const arr = type3.items;
+      return arr.find((q) => q.id === id1) ?? arr[hash(id1) % arr.length];
+    }
+    const arr = type4.passages;
+    return arr.find((q) => q.id === id1) ?? arr[hash(id1) % arr.length];
   })();
 
   const start = () => {

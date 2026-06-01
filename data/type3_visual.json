@@ -2292,18 +2292,20 @@
     {
       "id": "t3_photo_008",
       "subtype": "photo",
-      "category": "office",
-      "difficulty": "easy",
-      "image_url": "https://images.unsplash.com/photo-1488751045188-3c55bbf9a3fa?w=800&h=500&fit=crop",
-      "image_description": "사무실에서 한 사람이 노트북으로 일하는 모습.",
-      "question": "Describe this picture in detail. What is the person doing, where are they, and what do you think is happening?",
+      "category": "market",
+      "difficulty": "medium",
+      "image_url": "https://images.unsplash.com/photo-1488459716781-31db52582fe9?w=800&h=500&fit=crop",
+      "image_description": "야외 시장 또는 푸드 마켓. 여러 상인과 손님이 좌판 사이를 오가며 음식·상품을 사고팔고 있음. 다양한 색상의 진열과 사람들의 활기찬 움직임이 보임.",
+      "question": "Describe this picture in detail. Who are the people, where are they, and what is the overall atmosphere?",
       "key_vocabulary": [
-        "working",
-        "laptop",
-        "desk",
-        "focused"
+        "outdoor market",
+        "vendors",
+        "customers",
+        "produce",
+        "stalls",
+        "lively"
       ],
-      "sample_answer": "In this picture, a person is sitting at a desk working on a laptop. They look focused on their screen. The desk appears to be in a clean and organized workspace. It looks like they are concentrating on their work."
+      "sample_answer": "This picture shows a busy outdoor market filled with vendors and customers. Stalls display fresh produce, food, and various goods. People are walking between the stalls, examining items and chatting with vendors. The atmosphere is lively and colorful, with a strong sense of community typical of traditional markets."
     },
     {
       "id": "t3_photo_009",
@@ -2359,20 +2361,166 @@
       "category": "library",
       "difficulty": "medium",
       "image_url": "https://images.unsplash.com/photo-1568667256549-094345857637?w=800&h=500&fit=crop",
-      "image_description": "도서관에서 사람들이 책을 읽거나 공부하는 모습.",
+      "image_description": "도서관 열람실. 여러 학생이 긴 테이블에 앉아 책을 읽거나 노트북으로 공부하고 있고, 양쪽 벽에는 천장까지 닿는 책장이 가득 차 있음.",
       "question": "Describe this picture in detail. What are the people doing, where are they, and what do you think is happening?",
       "key_vocabulary": [
         "library",
         "studying",
         "reading",
-        "books"
+        "books",
+        "bookshelves",
+        "focused"
       ],
-      "sample_answer": "This picture shows a library scene. People are sitting at tables, reading books or studying. The atmosphere looks quiet and focused. Tall bookshelves filled with books are visible in the background, creating a typical study environment."
+      "sample_answer": "This picture shows a library scene. Several students are sitting at long wooden tables, some reading books and others working on laptops. Tall bookshelves filled with thousands of books line the walls. The atmosphere looks quiet and focused, typical of a serious study environment."
+    },
+    {
+      "id": "t3_photo_013",
+      "subtype": "photo",
+      "category": "airport",
+      "difficulty": "medium",
+      "image_url": "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=800&h=500&fit=crop",
+      "image_description": "공항 터미널의 출국 대기 구역. 여러 여행객이 캐리어를 끌고 이동하거나 의자에 앉아 비행기를 기다리고 있음. 대형 출발 안내 전광판이 보임.",
+      "question": "Describe this picture in detail. Where is this place and what are the people doing?",
+      "key_vocabulary": [
+        "airport",
+        "terminal",
+        "passengers",
+        "luggage",
+        "boarding",
+        "departure"
+      ],
+      "sample_answer": "This picture is taken at an airport terminal. Many passengers are walking through the area with their suitcases, while others are seated waiting for their flights. A large departure board displays flight information. The atmosphere appears busy but organized, capturing the typical scene of international travel."
+    },
+    {
+      "id": "t3_photo_014",
+      "subtype": "photo",
+      "category": "construction",
+      "difficulty": "medium",
+      "image_url": "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=800&h=500&fit=crop",
+      "image_description": "건설 현장. 안전모와 작업복을 입은 여러 건설 작업자가 도면을 보거나 자재를 운반하고 있고, 배경에 크레인과 미완성 건물의 철골 구조가 보임.",
+      "question": "Describe this picture in detail. What are the workers doing and what kind of project does this appear to be?",
+      "key_vocabulary": [
+        "construction site",
+        "workers",
+        "helmets",
+        "crane",
+        "building",
+        "blueprints"
+      ],
+      "sample_answer": "This picture shows a construction site with several workers wearing safety helmets and reflective vests. Some are examining blueprints while others are moving materials. A large crane and the steel framework of an unfinished building are visible in the background. The scene suggests a major commercial construction project in progress."
+    },
+    {
+      "id": "t3_photo_015",
+      "subtype": "photo",
+      "category": "event",
+      "difficulty": "medium",
+      "image_url": "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?w=800&h=500&fit=crop",
+      "image_description": "콘서트 또는 페스티벌 현장. 수많은 관객이 무대 앞에 모여 손을 들거나 휴대폰을 켜고 환호하고 있음. 무대 조명과 연기 효과가 분위기를 띄움.",
+      "question": "Describe this picture in detail. What kind of event is this and how do the people seem to feel?",
+      "key_vocabulary": [
+        "concert",
+        "crowd",
+        "audience",
+        "stage",
+        "lights",
+        "cheering"
+      ],
+      "sample_answer": "This picture captures a large concert or music festival. A huge crowd of people fills the venue in front of the stage, with many raising their hands or holding up phones to record the performance. Colorful stage lights and smoke effects create an exciting atmosphere. The audience clearly looks energetic and emotionally engaged."
+    },
+    {
+      "id": "t3_photo_016",
+      "subtype": "photo",
+      "category": "transport",
+      "difficulty": "medium",
+      "image_url": "https://images.unsplash.com/photo-1517022812141-23620dba5c23?w=800&h=500&fit=crop",
+      "image_description": "기차역 또는 지하철 플랫폼의 출퇴근 시간. 수십 명의 통근자들이 빠른 걸음으로 이동하고 있고, 일부는 휴대폰을 보거나 가방을 메고 있음. 모션 블러로 인해 움직임이 강조됨.",
+      "question": "Describe this picture. Where is this place, what time of day might it be, and what are the people doing?",
+      "key_vocabulary": [
+        "train station",
+        "platform",
+        "commuters",
+        "rush hour",
+        "crowd",
+        "hurrying"
+      ],
+      "sample_answer": "This picture shows a train station platform during rush hour. Dozens of commuters are moving quickly in different directions, some checking their phones while others carry briefcases or bags. The motion blur emphasizes how fast everyone is moving. The image clearly captures the energy and stress of morning or evening rush hour in a major city."
+    },
+    {
+      "id": "t3_photo_017",
+      "subtype": "photo",
+      "category": "office",
+      "difficulty": "medium",
+      "image_url": "https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&h=500&fit=crop",
+      "image_description": "넓은 오픈 오피스. 여러 직원들이 책상에서 모니터를 보며 일하거나 동료와 대화하고 있음. 자연광이 들어오는 모던한 인테리어.",
+      "question": "Describe this picture. What does the workplace look like and what are the employees doing?",
+      "key_vocabulary": [
+        "open office",
+        "employees",
+        "monitors",
+        "collaboration",
+        "modern",
+        "workspace"
+      ],
+      "sample_answer": "This picture shows a modern open-plan office filled with employees. Some are sitting at their desks focused on their computer monitors, while others are gathered in small groups having discussions. The space has clean, modern design with natural light coming through large windows. The atmosphere appears productive but relaxed, typical of a contemporary tech company."
+    },
+    {
+      "id": "t3_photo_018",
+      "subtype": "photo",
+      "category": "restaurant",
+      "difficulty": "medium",
+      "image_url": "https://images.unsplash.com/photo-1559329007-40df8a9345d8?w=800&h=500&fit=crop",
+      "image_description": "분주한 카페 내부. 거의 모든 테이블이 손님으로 차 있고, 카운터에서는 바리스타가 음료를 만들고 있음. 사람들이 노트북으로 작업하거나 친구와 대화 중.",
+      "question": "Describe this picture in detail. What is happening in this place?",
+      "key_vocabulary": [
+        "cafe",
+        "barista",
+        "customers",
+        "laptop",
+        "busy",
+        "chatting"
+      ],
+      "sample_answer": "This picture shows a busy cafe with most tables occupied by customers. At the counter, a barista is preparing drinks while two more customers wait for their orders. Some people are working on laptops, others are chatting with friends, and a couple is reading. The cafe has a warm and inviting atmosphere, suggesting it is a popular neighborhood spot."
+    },
+    {
+      "id": "t3_photo_019",
+      "subtype": "photo",
+      "category": "shopping",
+      "difficulty": "medium",
+      "image_url": "https://images.unsplash.com/photo-1481437156560-3205f6a55735?w=800&h=500&fit=crop",
+      "image_description": "대형 쇼핑몰 내부. 다층 구조의 통로를 따라 많은 쇼핑객이 가게 사이를 이동하고 있고, 에스컬레이터와 화려한 매장 간판이 보임.",
+      "question": "Describe this picture in detail. Where is this place, who are the people, and what is the atmosphere?",
+      "key_vocabulary": [
+        "shopping mall",
+        "shoppers",
+        "stores",
+        "escalator",
+        "multi-level",
+        "crowded"
+      ],
+      "sample_answer": "This picture shows the interior of a large multi-level shopping mall. Shoppers are walking along the wide walkways between brightly lit storefronts. Some are carrying shopping bags while others are riding the escalator between floors. The mall is clearly busy, suggesting it is a weekend or holiday shopping day. The overall atmosphere is energetic and commercial."
+    },
+    {
+      "id": "t3_photo_020",
+      "subtype": "photo",
+      "category": "sports",
+      "difficulty": "medium",
+      "image_url": "https://images.unsplash.com/photo-1459865264687-595d652de67e?w=800&h=500&fit=crop",
+      "image_description": "축구 또는 야구 경기장의 관중석. 수천 명의 관중이 좌석을 가득 메우고 응원을 하고 있으며, 일부는 단체 응원복을 입거나 깃발을 흔들고 있음.",
+      "question": "Describe this picture. What kind of event is taking place and how does the crowd seem?",
+      "key_vocabulary": [
+        "stadium",
+        "crowd",
+        "fans",
+        "cheering",
+        "spectators",
+        "match"
+      ],
+      "sample_answer": "This picture shows a packed sports stadium during a match. Thousands of fans fill the seats, with many cheering, waving flags, or wearing team jerseys. Some sections appear to be organized supporter groups in matching colors. The atmosphere is clearly intense and exciting, suggesting an important game between popular teams."
     }
   ],
   "statistics": {
-    "total": 57,
+    "total": 65,
     "charts": 45,
-    "photos": 12
+    "photos": 20
   }
 }
