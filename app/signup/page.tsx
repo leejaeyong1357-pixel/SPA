@@ -87,6 +87,8 @@ export default function SignupPage() {
         router.push("/onboarding");
       } else if (!s.setupCompleted) {
         router.push("/setup");
+      } else if (!s.noticesAccepted) {
+        router.push("/notices");
       } else {
         router.push("/dashboard");
       }

@@ -40,7 +40,8 @@ export default function LoadingSetupPage() {
       if (pct >= 100) {
         clearInterval(id);
         setTimeout(() => {
-          router.replace("/dashboard");
+          const cfg = storage.getSettings();
+          router.replace(cfg.noticesAccepted ? "/dashboard" : "/notices");
         }, 400);
       }
     }, TICK_MS);

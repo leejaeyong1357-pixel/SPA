@@ -31,6 +31,7 @@ export interface UserSettings {
   setupCompleted: boolean;
   onboardingSeen?: boolean;
   onboardingSkipForever?: boolean;
+  noticesAccepted?: boolean;
   flame?: FlameState;
 }
 

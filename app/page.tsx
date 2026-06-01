@@ -23,6 +23,8 @@ export default function HomePage() {
       } else {
         router.replace("/setup");
       }
+    } else if (!s.noticesAccepted) {
+      router.replace("/notices");
     } else {
       router.replace("/dashboard");
     }

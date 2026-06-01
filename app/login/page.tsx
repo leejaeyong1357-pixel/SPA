@@ -38,6 +38,8 @@ export default function LoginPage() {
       router.push("/onboarding");
     } else if (!settings.setupCompleted) {
       router.push("/setup");
+    } else if (!settings.noticesAccepted) {
+      router.push("/notices");
     } else {
       router.push("/dashboard");
     }

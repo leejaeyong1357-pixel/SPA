@@ -32,7 +32,6 @@ export default function DashboardPage() {
   const [activeTab, setActiveTab] = useState<"home" | "study" | "mock" | "stats">("home");
   const [selectedRecord, setSelectedRecord] = useState<StudyRecord | null>(null);
   const [showRanking, setShowRanking] = useState(false);
-  const [showNotice, setShowNotice] = useState(false);
 
   useEffect(() => {
     if (!storage.isLoggedIn()) {
@@ -72,12 +71,14 @@ export default function DashboardPage() {
             <br />
             <span className="highlight-blue">목표 등급</span>까지.
           </h1>
-          <button
-            onClick={() => setShowNotice(true)}
+          <a
+            href="/api/assets?key=api-key-guide"
+            target="_blank"
+            rel="noopener noreferrer"
             className="shrink-0 px-4 py-2.5 bg-teczen-blue text-white text-sm font-bold rounded-xl hover:bg-blue-700 transition-colors whitespace-nowrap shadow-sm"
           >
-            📢 공지 보기
-          </button>
+            📘 HChat 연동법
+          </a>
         </div>
         <p className="text-teczen-gray-600 mb-8">
           시간·장소 구애받지 않아요. 본인 등급에 맞춘 SPA 학습.
@@ -320,7 +321,6 @@ export default function DashboardPage() {
       {selectedRecord && (
         <RecordDetailModal record={selectedRecord} onClose={() => setSelectedRecord(null)} />
       )}
-      {showNotice && <NoticeModal onClose={() => setShowNotice(false)} />}
       {showRanking && (
         <FlameRankingModal
           onClose={() => setShowRanking(false)}
@@ -735,43 +735,3 @@ function MetricCard({
   );
 }
 
-function NoticeModal({ onClose }: { onClose: () => void }) {
-  const [error, setError] = useState<string | null>(null);
-  const [loaded, setLoaded] = useState(false);
-  const src = "/api/assets?key=notice-image&t=" + Date.now();
-  return (
-    <div
-      className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4"
-      onClick={onClose}
-    >
-      <div
-        className="bg-white rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto p-4"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="flex items-center justify-between mb-3 px-2">
-          <h2 className="font-bold text-teczen-ink">📢 공지</h2>
-          <button
-            onClick={onClose}
-            className="text-teczen-gray-400 hover:text-teczen-ink text-2xl leading-none"
-          >
-            ×
-          </button>
-        </div>
-        {error ? (
-          <div className="py-10 text-center text-sm text-teczen-gray-500">
-            아직 등록된 공지가 없습니다.
-          </div>
-        ) : (
-          <img
-            src={src}
-            alt="공지"
-            className="w-full h-auto rounded-lg"
-            onLoad={() => setLoaded(true)}
-            onError={() => setError("not-found")}
-            style={{ display: loaded ? "block" : "none" }}
-          />
-        )}
-      </div>
-    </div>
-  );
-}
