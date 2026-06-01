@@ -14,6 +14,7 @@ import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import Timer from "@/components/ui/Timer";
 import ChartRenderer from "@/components/charts/ChartRenderer";
+import MockSummary from "@/components/mock/MockSummary";
 import mockExams from "@/data/mock_exams.json";
 import type1 from "@/data/type1_business_casual.json";
 import type2 from "@/data/type2_opinion.json";
@@ -167,47 +168,20 @@ export default function MockExamPage() {
       Object.values(feedbacks).reduce((s, f) => s + f.scoreEstimate, 0) /
         Math.max(1, Object.keys(feedbacks).length),
     );
+    const summaryAnswers: Record<QuestionType, { questionId: string; answer: string; feedback?: AiFeedback }> = {
+      1: { questionId: items.type1_id, answer: answers[1] || "", feedback: feedbacks[1] },
+      2: { questionId: items.type2_id, answer: answers[2] || "", feedback: feedbacks[2] },
+      3: { questionId: items.type3_id, answer: answers[3] || "", feedback: feedbacks[3] },
+      4: { questionId: items.type4_id, answer: answers[4] || "", feedback: feedbacks[4] },
+    };
     return (
       <>
         <Header />
-        <main className="max-w-4xl mx-auto p-6">
-          <Card className="mb-4 text-center">
-            <h1 className="text-2xl font-bold text-teczen-gray-900 mb-3">시험 종료</h1>
-            <div className="inline-block px-6 py-3 bg-teczen-navy/5 rounded-xl mb-3">
-              <div className="text-xs text-teczen-gray-600 mb-1">예상 점수</div>
-              <div className="text-5xl font-black text-teczen-navy">{totalScore}</div>
-              <div className="text-sm text-teczen-gray-600">/ 96</div>
-            </div>
-            <div className="text-lg font-bold text-teczen-red mb-4">
-              {levelLabel(scoreToLevel(totalScore))}
-            </div>
-            <Link href="/dashboard">
-              <Button>대시보드로</Button>
-            </Link>
-          </Card>
-
-          <div className="grid md:grid-cols-2 gap-4">
-            {[1, 2, 3, 4].map((t) => {
-              const fb = feedbacks[t];
-              return (
-                <Card key={t}>
-                  <div className="text-xs font-semibold text-teczen-red mb-1">유형 {t}</div>
-                  <div className="text-2xl font-bold text-teczen-navy mb-1">
-                    {fb ? `${fb.scoreEstimate}점` : "..."}
-                  </div>
-                  <div className="text-xs text-teczen-gray-500 mb-2">
-                    {fb ? levelLabel(fb.estimatedLevel) : "분석 중"}
-                  </div>
-                  {fb && (
-                    <p className="text-xs text-teczen-gray-700 line-clamp-3">
-                      {fb.improvements[0]}
-                    </p>
-                  )}
-                </Card>
-              );
-            })}
-          </div>
-        </main>
+        <MockSummary
+          totalScore={totalScore}
+          answers={summaryAnswers}
+          durationMs={startedAt ? Date.now() - startedAt : undefined}
+        />
       </>
     );
   }
@@ -282,6 +256,22 @@ export default function MockExamPage() {
         )}
 
         <Card className="mb-4">
+          <div className="mb-3 p-3 bg-teczen-blue/10 border-l-4 border-teczen-blue rounded-r-xl flex items-start gap-2">
+            <span className="text-xl leading-none">📌</span>
+            <div>
+              <div className="text-xs font-bold text-teczen-blue mb-0.5">미션</div>
+              <div className="text-sm font-semibold text-teczen-ink leading-snug">
+                {currentType === 1 &&
+                  "질문을 듣고 1분 안에 영어로 답변하세요. 본인 경험·생각을 자유롭게."}
+                {currentType === 2 &&
+                  "주제에 대한 본인 의견을 근거와 함께 1분 안에 영어로 답변하세요."}
+                {currentType === 3 &&
+                  "위 그래프/사진을 보고 핵심 내용을 1분 안에 영어로 묘사·분석하세요."}
+                {currentType === 4 &&
+                  "지문을 듣고 핵심 내용을 1분 안에 본인 말로 영어 요약하세요. (질문 없음 — 요약만)"}
+              </div>
+            </div>
+          </div>
           <div className="text-xs font-semibold text-teczen-red mb-1">
             {currentType === 4 ? "PASSAGE" : "QUESTION"}
           </div>

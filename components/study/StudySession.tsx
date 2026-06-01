@@ -184,6 +184,22 @@ export default function StudySession({
 
       <Card>
         <div className="mb-3">
+          <div className="mb-3 p-3 bg-teczen-blue/10 border-l-4 border-teczen-blue rounded-r-xl flex items-start gap-2">
+            <span className="text-xl leading-none">📌</span>
+            <div>
+              <div className="text-xs font-bold text-teczen-blue mb-0.5">미션</div>
+              <div className="text-sm font-semibold text-teczen-ink leading-snug">
+                {type === 1 &&
+                  "질문을 듣고 1분 안에 영어로 답변하세요. 본인 경험·생각을 자유롭게."}
+                {type === 2 &&
+                  "주제에 대한 본인 의견을 근거와 함께 1분 안에 영어로 답변하세요."}
+                {type === 3 &&
+                  "위 그래프/사진을 보고 핵심 내용을 1분 안에 영어로 묘사·분석하세요."}
+                {type === 4 &&
+                  "지문을 듣고 핵심 내용을 1분 안에 본인 말로 영어 요약하세요. (질문 없음 — 요약만)"}
+              </div>
+            </div>
+          </div>
           <div className="text-xs font-semibold text-teczen-red mb-2">
             {type === 4 ? "PASSAGE (단어 위에 마우스 → 뜻)" : "QUESTION (단어 위에 마우스 → 뜻)"}
           </div>
