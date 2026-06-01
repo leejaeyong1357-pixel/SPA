@@ -28,12 +28,35 @@ import {
 } from "recharts";
 import { TECZEN_COLORS, CHART_MONO_NAVY } from "@/lib/colors";
 
+interface RealLearner {
+  employeeId: string;
+  name: string;
+  team: string;
+  position: string;
+  targetLevel: number;
+  totalProblems: number;
+  mockExamCount: number;
+  avgScore: number;
+  recentScore: number;
+  lastActiveAt: number;
+}
+
 export default function AdminPage() {
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
   const [search, setSearch] = useState("");
   const [teamFilter, setTeamFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState<"all" | "started" | "not_started">("all");
+  const [realLearners, setRealLearners] = useState<RealLearner[]>([]);
+
+  useEffect(() => {
+    fetch("/api/admin/learners", { cache: "no-store" })
+      .then((r) => r.json())
+      .then((d) => {
+        if (d?.ok && Array.isArray(d.learners)) setRealLearners(d.learners);
+      })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     const session = storage.getSession();
@@ -49,8 +72,45 @@ export default function AdminPage() {
     setMounted(true);
   }, [router]);
 
-  const stats = useMemo(() => (mounted ? getAdminStats() : null), [mounted]);
-  const top5 = useMemo(() => (mounted ? getTop5() : []), [mounted]);
+  const stats = useMemo(() => {
+    if (!mounted) return null;
+    if (realLearners.length === 0) return getAdminStats();
+    // 실제 데이터 기반으로 재계산
+    const base = getAllLearners();
+    const realMap = new Map(realLearners.map((r) => [r.employeeId, r]));
+    const merged = base.map((l) => {
+      const r = realMap.get(l.employeeId);
+      if (!r) return l;
+      const isActive = r.lastActiveAt > 0 && Date.now() - r.lastActiveAt < 7 * 86400000;
+      return {
+        ...l,
+        status: (r.totalProblems === 0 ? "not_started" : isActive ? "active" : "inactive") as AdminLearnerRow["status"],
+        targetLevel: r.targetLevel || l.targetLevel,
+        totalProblems: r.totalProblems,
+        mockExamCount: r.mockExamCount,
+        averageScore: r.avgScore,
+        recentScore: r.recentScore,
+        estimatedLevel: r.avgScore > 0 ? Math.max(1, Math.min(8, Math.round(r.avgScore / 12))) : l.estimatedLevel,
+      };
+    });
+    const started = merged.filter((l) => l.status !== "not_started");
+    const active = merged.filter((l) => l.status === "active");
+    const reached = started.filter(
+      (l) => l.targetLevel && l.estimatedLevel && l.estimatedLevel >= l.targetLevel,
+    );
+    const avgScore = started.length
+      ? Math.round(started.reduce((s, l) => s + l.averageScore, 0) / started.length)
+      : 0;
+    return {
+      total: merged.length,
+      started: started.length,
+      notStarted: merged.length - started.length,
+      active: active.length,
+      avgScore,
+      avgHours: 0,
+      targetReached: reached.length,
+    };
+  }, [mounted, realLearners]);
   const flameTop = useMemo(() => (mounted ? getFlameTop5() : []), [mounted]);
   const allWithFlame = useMemo(
     () =>
@@ -66,7 +126,37 @@ export default function AdminPage() {
     : "0";
   const teamAvgs = useMemo(() => (mounted ? getTeamAverages() : []), [mounted]);
   const levelDist = useMemo(() => (mounted ? getLevelDistribution() : []), [mounted]);
-  const allLearners = useMemo(() => (mounted ? getAllLearners() : []), [mounted]);
+  const allLearners = useMemo(() => {
+    if (!mounted) return [];
+    const base = getAllLearners();
+    if (realLearners.length === 0) return base;
+    const realMap = new Map(realLearners.map((r) => [r.employeeId, r]));
+    return base.map((l) => {
+      const r = realMap.get(l.employeeId);
+      if (!r) return l;
+      const isActive = r.lastActiveAt > 0 && Date.now() - r.lastActiveAt < 7 * 86400000;
+      const status: AdminLearnerRow["status"] =
+        r.totalProblems === 0 ? "not_started" : isActive ? "active" : "inactive";
+      return {
+        ...l,
+        status,
+        targetLevel: r.targetLevel || l.targetLevel,
+        totalProblems: r.totalProblems,
+        mockExamCount: r.mockExamCount,
+        averageScore: r.avgScore,
+        recentScore: r.recentScore,
+        lastActiveAt: r.lastActiveAt || l.lastActiveAt,
+      };
+    });
+  }, [mounted, realLearners]);
+
+  const top5 = useMemo(() => {
+    if (!mounted) return [];
+    return [...allLearners]
+      .filter((l) => l.status !== "not_started" && l.recentScore > 0)
+      .sort((a, b) => b.recentScore - a.recentScore)
+      .slice(0, 5);
+  }, [mounted, allLearners]);
 
   if (!mounted || !stats) return null;
 

@@ -5,6 +5,7 @@ import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import { useTTS, useSTT } from "@/lib/speech";
 import { storage } from "@/lib/storage";
+import { pushUserToServer } from "@/lib/userSync";
 import { getFeedback } from "@/lib/hchat";
 import { scoreToLevel, levelLabel } from "@/lib/scoring";
 import type { AiFeedback, QuestionType } from "@/types";
@@ -127,6 +128,7 @@ export default function MockExamPage() {
       totalScore,
       estimatedLevel,
     });
+    pushUserToServer();
     setPhase("done");
   };
 

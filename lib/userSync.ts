@@ -50,10 +50,21 @@ export async function pushUserToServer(): Promise<void> {
     if (!session || session.isAdmin) return;
 
     const settings = storage.getSettings();
+    const records = storage.getRecords();
+    const mockResults = storage.getMockResults();
     const pwHash =
       typeof window !== "undefined"
         ? localStorage.getItem(pwKey(session.employeeId))
         : null;
+
+    const scores = records.map((r) => r.score || 0).filter((n) => n > 0);
+    const avgScore = scores.length
+      ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length)
+      : 0;
+    const recentScore = scores.length ? scores[scores.length - 1] : 0;
+    const lastRecordAt = records.length
+      ? Math.max(...records.map((r) => r.createdAt))
+      : 0;
 
     await fetch("/api/user-settings", {
       method: "POST",
@@ -62,6 +73,18 @@ export async function pushUserToServer(): Promise<void> {
         employeeId: session.employeeId,
         settings,
         pwHash,
+        profile: {
+          name: session.name,
+          team: session.team || "",
+          position: session.position || "",
+        },
+        stats: {
+          totalProblems: records.length,
+          mockExamCount: mockResults.length,
+          avgScore,
+          recentScore,
+          lastActiveAt: lastRecordAt,
+        },
       }),
     });
   } catch {

@@ -338,15 +338,27 @@ export default function MyPage() {
               📘 SPA 시험 안내 다시 보기
             </button>
             <button
-              onClick={() => {
-                if (confirm("학습 기록과 단어장을 모두 삭제합니다. 진행하시겠습니까?")) {
-                  storage.clearMyData();
-                  localStorage.removeItem("spa.wordCache");
-                  alert("초기화되었습니다.");
-                  router.push("/dashboard");
-                }
+              onClick={async () => {
+                if (!confirm("학습 기록·단어장·불꽃을 모두 삭제합니다. 진행하시겠습니까?")) return;
+                storage.clearMyData();
+                localStorage.removeItem("spa.wordCache");
+                // 서버(KV) 학습 기록·불꽃도 같이 비움
+                try {
+                  await fetch(
+                    `/api/user-settings?employeeId=${encodeURIComponent(session.employeeId)}`,
+                    { method: "DELETE" },
+                  );
+                } catch {}
+                // settings 의 flame 도 초기화해서 push
+                const s = storage.getSettings();
+                storage.saveSettings({
+                  ...s,
+                  flame: { level: 0, streak: 0, lastStudyDay: "", color: s.flame?.color || "#FF6B35" },
+                });
+                alert("초기화되었습니다.");
+                router.push("/dashboard");
               }}
-              className="block w-full text-left p-3 hover:bg-red-50 rounded-xl text-sm text-teczen-red"
+              className="block w-full text-left p-3 bg-red-50 hover:bg-red-100 rounded-xl text-sm font-semibold text-teczen-red border border-red-200"
             >
               🗑 학습 기록 전체 초기화
             </button>

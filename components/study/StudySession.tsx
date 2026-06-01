@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useTTS, useSTT } from "@/lib/speech";
 import { storage } from "@/lib/storage";
 import { pushFlame } from "@/lib/flameSync";
+import { pushUserToServer } from "@/lib/userSync";
 import { getFeedback, translateText } from "@/lib/hchat";
 import type { AiFeedback, QuestionType } from "@/types";
 import Button from "@/components/ui/Button";
@@ -148,8 +149,9 @@ export default function StudySession({
       bookmarked: false,
       createdAt: Date.now(),
     });
-    // 학습으로 올라간 불꽃을 공용 랭킹에 반영
+    // 학습으로 올라간 불꽃을 공용 랭킹에 반영 + 관리자 통계용 KV 동기화
     pushFlame();
+    pushUserToServer();
   };
 
   useEffect(() => {
