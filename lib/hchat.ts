@@ -124,6 +124,9 @@ async function callProxy(
   let body: any;
 
   if (isAnthropic) {
+    // HChat 게이트웨이는 브라우저 호출 시 Authorization 헤더만 CORS 로 허용.
+    // x-api-key 는 막혀있어 403 반환. 둘 다 보내서 호환성 확보.
+    headers["Authorization"] = `Bearer ${config.apiKey}`;
     headers["x-api-key"] = config.apiKey;
     headers["anthropic-version"] = "2023-06-01";
     const systemMsg = messages.find((m) => m.role === "system");
