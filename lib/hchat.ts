@@ -1,5 +1,6 @@
 import type { AiFeedback, QuestionType, Level } from "@/types";
 import { scoreToLevel } from "./scoring";
+import { endpointForModel } from "./constants";
 
 interface FeedbackRequest {
   type: QuestionType;
@@ -99,29 +100,86 @@ All Korean text must be in 한국어. modelAnswer must be in English.
 
 scoreEstimate MUST equal pronunciation + listening + vocabulary + grammar + fluency. Be honest and strict.`;
 
+/**
+ * 브라우저에서 사내 HChat 게이트웨이로 직접 호출.
+ * 외부 클라우드(Cloudflare)에서는 사내망 못 들어가므로 클라이언트(회사 노트북 브라우저)가 직접 호출.
+ * 회사 노트북은 사내망에 있어서 internal-apigw-kr.hmg-corp.io 에 닿을 수 있음.
+ * CORS 가 막혀있으면 fetch 가 TypeError 로 떨어지므로 그때는 친절한 메시지 반환.
+ */
 async function callProxy(
   config: HchatConfig,
   messages: { role: string; content: string }[],
   maxTokens = 1500,
 ): Promise<{ ok: boolean; content?: string; error?: string }> {
+  const model = config.model || "claude-sonnet-4-6";
+  const isAnthropic = model.startsWith("claude");
+  const endpoint = endpointForModel(model);
+  const url = isAnthropic
+    ? endpoint.replace(/\/$/, "") + "/messages"
+    : endpoint.replace(/\/$/, "") + "/chat/completions";
+
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+  };
+  let body: any;
+
+  if (isAnthropic) {
+    headers["x-api-key"] = config.apiKey;
+    headers["anthropic-version"] = "2023-06-01";
+    const systemMsg = messages.find((m) => m.role === "system");
+    const otherMsgs = messages.filter((m) => m.role !== "system");
+    body = {
+      model,
+      max_tokens: maxTokens,
+      messages: otherMsgs,
+      ...(systemMsg ? { system: systemMsg.content } : {}),
+    };
+  } else {
+    headers["Authorization"] = `Bearer ${config.apiKey}`;
+    headers["api-key"] = config.apiKey;
+    headers["x-api-key"] = config.apiKey;
+    body = { model, messages, max_tokens: maxTokens, temperature: 0.3 };
+  }
+
   try {
-    const res = await fetch("/api/hchat", {
+    const res = await fetch(url, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        apiKey: config.apiKey,
-        model: config.model,
-        messages,
-        maxTokens,
-      }),
+      headers,
+      body: JSON.stringify(body),
     });
-    const data = await res.json();
-    if (!data.ok) {
-      return { ok: false, error: data.error || `HTTP ${data.status || "?"}` };
+    const rawText = await res.text();
+    let data: any;
+    try {
+      data = JSON.parse(rawText);
+    } catch {
+      data = { raw: rawText };
     }
-    return { ok: true, content: data.content };
+    if (!res.ok) {
+      const errMsg =
+        data?.error?.message ||
+        data?.message ||
+        data?.error ||
+        data?.raw ||
+        `HTTP ${res.status} ${res.statusText}`;
+      return {
+        ok: false,
+        error: typeof errMsg === "string" ? errMsg : JSON.stringify(errMsg),
+      };
+    }
+    const content = isAnthropic
+      ? data.content?.[0]?.text || data.content?.[0]?.value || ""
+      : data.choices?.[0]?.message?.content || "";
+    return { ok: true, content };
   } catch (e: any) {
-    return { ok: false, error: e.message || "fetch failed" };
+    // 브라우저가 사내망에 못 들어가거나 CORS 차단 시 여기로 떨어짐
+    const msg = e?.message || "fetch failed";
+    const isCorsLike = /failed to fetch|networkerror|cors/i.test(msg);
+    return {
+      ok: false,
+      error: isCorsLike
+        ? "사내 HChat에 접속할 수 없습니다. 회사 노트북·사내망에서 접속했는지 확인해주세요. (CORS 차단 가능성)"
+        : msg,
+    };
   }
 }
 
