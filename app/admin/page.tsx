@@ -314,6 +314,8 @@ export default function AdminPage() {
           </div>
         </div>
 
+        <AssetsAdmin />
+
       </main>
     </>
   );
@@ -337,4 +339,115 @@ function StatusBadge({ status }: { status: AdminLearnerRow["status"] }) {
     return <span className="text-xs px-2 py-0.5 bg-amber-100 text-amber-800 rounded-full font-semibold">휴면</span>;
   }
   return <span className="text-xs px-2 py-0.5 bg-teczen-gray-100 text-teczen-gray-600 rounded-full">미시작</span>;
+}
+
+function AssetsAdmin() {
+  return (
+    <div className="mt-10 bg-white rounded-3xl border border-teczen-gray-200 p-6">
+      <h2 className="text-xl font-black text-teczen-ink mb-1">📎 자산 업로드</h2>
+      <p className="text-sm text-teczen-gray-600 mb-5">
+        학습자에게 보여줄 PDF·공지 사진을 업로드합니다. 업로드 즉시 모두에게 반영.
+      </p>
+      <div className="grid md:grid-cols-2 gap-4">
+        <AssetUploader
+          assetKey="api-key-guide"
+          title="📘 HChat API 키 발급 가이드 (PDF)"
+          accept="application/pdf"
+          desc="학습자 설정·마이페이지에 'PDF 보기/다운로드' 로 노출됨"
+        />
+        <AssetUploader
+          assetKey="notice-image"
+          title="📢 학습자 대시보드 공지 이미지"
+          accept="image/*"
+          desc="대시보드 상단 '공지 보기' 버튼 클릭 시 노출됨"
+        />
+      </div>
+    </div>
+  );
+}
+
+function AssetUploader({
+  assetKey,
+  title,
+  accept,
+  desc,
+}: {
+  assetKey: string;
+  title: string;
+  accept: string;
+  desc: string;
+}) {
+  const [busy, setBusy] = useState(false);
+  const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
+
+  const handleFile = async (file: File) => {
+    if (file.size > 20 * 1024 * 1024) {
+      setMsg({ ok: false, text: "20MB 이하 파일만 업로드 가능합니다." });
+      return;
+    }
+    setBusy(true);
+    setMsg(null);
+    try {
+      const dataUrl: string = await new Promise((resolve, reject) => {
+        const r = new FileReader();
+        r.onload = () => resolve(String(r.result));
+        r.onerror = () => reject(new Error("파일 읽기 실패"));
+        r.readAsDataURL(file);
+      });
+      const res = await fetch("/api/assets", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key: assetKey, dataUrl, filename: file.name }),
+      });
+      const data = await res.json();
+      if (!data.ok) {
+        setMsg({ ok: false, text: data.error || "업로드 실패" });
+      } else {
+        setMsg({ ok: true, text: `✓ 업로드 완료 (${file.name})` });
+      }
+    } catch (e: any) {
+      setMsg({ ok: false, text: e.message || "오류" });
+    }
+    setBusy(false);
+  };
+
+  return (
+    <div className="p-4 rounded-2xl border-2 border-teczen-gray-200 hover:border-teczen-blue transition-colors">
+      <div className="font-bold text-teczen-ink mb-1">{title}</div>
+      <div className="text-xs text-teczen-gray-500 mb-3">{desc}</div>
+      <label className="inline-block">
+        <input
+          type="file"
+          accept={accept}
+          disabled={busy}
+          className="hidden"
+          onChange={(e) => {
+            const f = e.target.files?.[0];
+            if (f) handleFile(f);
+            e.target.value = "";
+          }}
+        />
+        <span
+          className={`inline-block px-4 py-2 rounded-xl text-sm font-bold cursor-pointer transition-colors ${
+            busy
+              ? "bg-teczen-gray-200 text-teczen-gray-500"
+              : "bg-teczen-blue text-white hover:bg-blue-700"
+          }`}
+        >
+          {busy ? "업로드 중..." : "파일 선택"}
+        </span>
+      </label>
+      {msg && (
+        <div
+          className={`mt-3 text-xs px-3 py-2 rounded-lg ${
+            msg.ok
+              ? "bg-green-50 text-green-800 border border-green-200"
+              : "bg-red-50 text-red-700 border border-red-200"
+          }`}
+        >
+          {msg.text}
+        </div>
+      )}
+    </div>
+  );
 }

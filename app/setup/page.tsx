@@ -150,20 +150,34 @@ export default function SetupPage() {
                 <br />
                 서버 주소는 사내 HChat 표준으로 미리 설정되어 있습니다.
               </p>
-              <div className="bg-teczen-blue/5 border border-teczen-blue/30 rounded-xl p-3 mb-4 flex items-center justify-between gap-2">
-                <div className="flex items-center gap-2">
-                  <span className="text-xl">📘</span>
-                  <span className="text-sm text-teczen-gray-700">
+              <div className="bg-teczen-blue/10 border-2 border-teczen-blue rounded-xl p-4 mb-4 flex items-center justify-between gap-3 flex-wrap">
+                <div className="flex items-center gap-2 flex-1 min-w-0">
+                  <span className="text-2xl">📘</span>
+                  <span className="text-sm text-teczen-ink font-semibold">
                     <b>API 키 발급 방법</b>이 처음이라 어렵나요?
                   </span>
                 </div>
-                <a
-                  href="/api-key-guide.pdf"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-3 py-1.5 bg-teczen-blue text-white text-xs font-bold rounded-lg hover:bg-blue-700 whitespace-nowrap"
-                >
-                  📖 PDF 가이드 보기
+                <div className="flex gap-2">
+                  <a
+                    href="/api/assets?key=api-key-guide"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-4 py-2 bg-teczen-blue text-white text-sm font-bold rounded-lg hover:bg-blue-700 whitespace-nowrap shadow-sm"
+                  >
+                    📖 PDF 가이드 보기
+                  </a>
+                  <a
+                    href="/api/assets?key=api-key-guide&dl=1"
+                    className="px-4 py-2 bg-white border-2 border-teczen-blue text-teczen-blue text-sm font-bold rounded-lg hover:bg-teczen-blue/5 whitespace-nowrap"
+                  >
+                    ⬇ 다운로드
+                  </a>
+                </div>
+              </div>
+              <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 mb-4 text-xs text-amber-900">
+                💡 <b>혼자 하기 어려울 시</b> 미래성장팀 <b>이재용 매니저</b>에게 연락 바랍니다.
+                <a href="tel:055-280-1741" className="font-mono font-bold text-amber-900 underline ml-1">
+                  ☎ 055-280-1741
                 </a>
               </div>
               <div className="space-y-3">

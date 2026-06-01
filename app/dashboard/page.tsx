@@ -32,6 +32,7 @@ export default function DashboardPage() {
   const [activeTab, setActiveTab] = useState<"home" | "study" | "mock" | "stats">("home");
   const [selectedRecord, setSelectedRecord] = useState<StudyRecord | null>(null);
   const [showRanking, setShowRanking] = useState(false);
+  const [showNotice, setShowNotice] = useState(false);
 
   useEffect(() => {
     if (!storage.isLoggedIn()) {
@@ -65,11 +66,19 @@ export default function DashboardPage() {
         <div className="mb-2 text-sm text-teczen-gray-500">
           안녕하세요, <span className="font-bold text-teczen-ink">{session.name}</span>님
         </div>
-        <h1 className="headline-xl text-teczen-ink mb-2">
-          언제 어디서든,
-          <br />
-          <span className="highlight-blue">목표 등급</span>까지.
-        </h1>
+        <div className="flex items-start justify-between gap-4 mb-2">
+          <h1 className="headline-xl text-teczen-ink">
+            언제 어디서든,
+            <br />
+            <span className="highlight-blue">목표 등급</span>까지.
+          </h1>
+          <button
+            onClick={() => setShowNotice(true)}
+            className="shrink-0 px-4 py-2.5 bg-teczen-blue text-white text-sm font-bold rounded-xl hover:bg-blue-700 transition-colors whitespace-nowrap shadow-sm"
+          >
+            📢 공지 보기
+          </button>
+        </div>
         <p className="text-teczen-gray-600 mb-8">
           시간·장소 구애받지 않아요. 본인 등급에 맞춘 SPA 학습.
         </p>
@@ -311,6 +320,7 @@ export default function DashboardPage() {
       {selectedRecord && (
         <RecordDetailModal record={selectedRecord} onClose={() => setSelectedRecord(null)} />
       )}
+      {showNotice && <NoticeModal onClose={() => setShowNotice(false)} />}
       {showRanking && (
         <FlameRankingModal
           onClose={() => setShowRanking(false)}
@@ -406,7 +416,7 @@ function FlameSection({
           </div>
           <button
             onClick={onShowRanking}
-            className="px-3 py-2 bg-teczen-ink text-white text-xs font-bold rounded-lg hover:bg-teczen-navy whitespace-nowrap"
+            className="px-3 py-2 bg-teczen-blue text-white text-xs font-bold rounded-lg hover:bg-blue-700 whitespace-nowrap"
           >
             🏆 불꽃 랭킹 →
           </button>
@@ -721,6 +731,47 @@ function MetricCard({
       </div>
       <div className={`font-black text-4xl ${colors[accent]} mb-1`}>{value}</div>
       <div className="text-xs text-teczen-gray-500">{sub}</div>
+    </div>
+  );
+}
+
+function NoticeModal({ onClose }: { onClose: () => void }) {
+  const [error, setError] = useState<string | null>(null);
+  const [loaded, setLoaded] = useState(false);
+  const src = "/api/assets?key=notice-image&t=" + Date.now();
+  return (
+    <div
+      className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4"
+      onClick={onClose}
+    >
+      <div
+        className="bg-white rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto p-4"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-center justify-between mb-3 px-2">
+          <h2 className="font-bold text-teczen-ink">📢 공지</h2>
+          <button
+            onClick={onClose}
+            className="text-teczen-gray-400 hover:text-teczen-ink text-2xl leading-none"
+          >
+            ×
+          </button>
+        </div>
+        {error ? (
+          <div className="py-10 text-center text-sm text-teczen-gray-500">
+            아직 등록된 공지가 없습니다.
+          </div>
+        ) : (
+          <img
+            src={src}
+            alt="공지"
+            className="w-full h-auto rounded-lg"
+            onLoad={() => setLoaded(true)}
+            onError={() => setError("not-found")}
+            style={{ display: loaded ? "block" : "none" }}
+          />
+        )}
+      </div>
     </div>
   );
 }

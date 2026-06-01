@@ -148,7 +148,7 @@ export default function MyPage() {
           </div>
           <div className="flex gap-2">
             <a
-              href="/api-key-guide.pdf"
+              href="/api/assets?key=api-key-guide"
               target="_blank"
               rel="noopener noreferrer"
               className="px-4 py-2 bg-teczen-blue text-white text-sm font-bold rounded-xl hover:bg-blue-700 transition-colors"
@@ -156,8 +156,7 @@ export default function MyPage() {
               📖 PDF 보기
             </a>
             <a
-              href="/api-key-guide.pdf"
-              download
+              href="/api/assets?key=api-key-guide&dl=1"
               className="px-4 py-2 bg-white border-2 border-teczen-blue text-teczen-blue text-sm font-bold rounded-xl hover:bg-teczen-blue/5 transition-colors"
             >
               ⬇ 다운로드
