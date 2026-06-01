@@ -15,10 +15,13 @@ export function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  // 휴대폰 차단 — 회사 노트북에서만 이용 가능
+  // 휴대폰·태블릿 전면 차단 — 회사 노트북에서만 이용 가능
   const ua = req.headers.get("user-agent") || "";
-  const isPhone = /iPhone|iPod|Windows Phone|BlackBerry|Opera Mini|IEMobile|(Android.+Mobile)/i.test(ua);
-  if (isPhone && !pathname.startsWith("/api")) {
+  const chPlatform = req.headers.get("sec-ch-ua-platform") || "";
+  const chMobile = req.headers.get("sec-ch-ua-mobile") || "";
+  const isMobileUA = /iPhone|iPad|iPod|Android|Windows Phone|BlackBerry|Opera Mini|IEMobile|Mobile|Tablet|KFAPWI|Silk|Kindle|Nexus 7|webOS|PlayBook/i.test(ua);
+  const isMobileCH = chMobile === "?1" || /iOS|Android/i.test(chPlatform);
+  if ((isMobileUA || isMobileCH) && !pathname.startsWith("/api")) {
     return new NextResponse(MOBILE_PAGE, {
       status: 200,
       headers: { "Content-Type": "text/html; charset=utf-8" },

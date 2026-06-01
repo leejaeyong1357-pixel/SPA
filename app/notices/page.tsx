@@ -84,6 +84,15 @@ export default function NoticesPage() {
       return;
     }
     const settings = storage.getSettings();
+    // 시험일/등급/API 설정이 끝나기 전엔 공지를 못 보게 — 처음부터 뜨면 안 되니까
+    if (!settings.setupCompleted) {
+      if (!settings.onboardingSeen && !settings.onboardingSkipForever) {
+        router.replace("/onboarding");
+      } else {
+        router.replace("/setup");
+      }
+      return;
+    }
     if (settings.noticesAccepted) {
       router.replace("/dashboard");
       return;

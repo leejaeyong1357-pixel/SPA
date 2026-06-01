@@ -8,6 +8,7 @@ import { getDaysUntil, scoreToLevel } from "@/lib/scoring";
 import { decayedFlame, FLAME_COLORS, MAX_FLAME_LEVEL } from "@/lib/flame";
 import { getFlameTop5 } from "@/lib/flameTop5";
 import { pushFlame, fetchRanking, type RankingEntry } from "@/lib/flameSync";
+import { pushUserToServer } from "@/lib/userSync";
 import type { UserSettings, StudyRecord, MockExamResult, UserSession } from "@/types";
 import Header from "@/components/layout/Header";
 import Flame from "@/components/Flame";
@@ -220,23 +221,17 @@ export default function DashboardPage() {
                   <h3 className="font-bold text-teczen-ink">최근 학습</h3>
                   <button
                     onClick={() => {
-                      if (confirm("이전 학습 기록을 삭제할까요? (오늘 학습한 것과 불꽃은 유지됩니다)")) {
-                        const todayStart = new Date();
-                        todayStart.setHours(0, 0, 0, 0);
-                        const kept = records.filter((r) => r.createdAt >= todayStart.getTime());
-                        if (typeof window !== "undefined") {
-                          const uid = session?.employeeId;
-                          if (uid) {
-                            localStorage.setItem(
-                              `spa.records.${uid}`,
-                              JSON.stringify(kept),
-                            );
-                          }
-                        }
-                        setRecords(kept);
+                      if (!confirm("최근 학습 기록 전체를 삭제할까요?\n(불꽃·연속학습 일수는 유지됩니다)")) return;
+                      if (typeof window !== "undefined" && session?.employeeId) {
+                        localStorage.setItem(
+                          `spa.records.${session.employeeId}`,
+                          JSON.stringify([]),
+                        );
                       }
+                      setRecords([]);
+                      pushUserToServer();
                     }}
-                    className="text-xs text-teczen-gray-500 hover:text-teczen-red px-2 py-1 rounded border border-teczen-gray-200 hover:border-teczen-red transition-colors"
+                    className="text-xs font-bold text-white bg-teczen-red hover:bg-teczen-red-dark px-3 py-1.5 rounded-lg transition-colors"
                   >
                     🗑 초기화
                   </button>

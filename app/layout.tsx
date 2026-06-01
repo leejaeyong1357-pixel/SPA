@@ -1,5 +1,6 @@
 import "./globals.css";
 import type { Metadata } from "next";
+import MobileGuard from "@/components/layout/MobileGuard";
 
 export const metadata: Metadata = {
   title: "Teczen SPA Trainer",
@@ -13,7 +14,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko">
-      <body>{children}</body>
+      <body>
+        {children}
+        <MobileGuard />
+      </body>
     </html>
   );
 }
