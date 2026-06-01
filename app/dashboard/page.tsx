@@ -12,6 +12,8 @@ import { pushUserToServer } from "@/lib/userSync";
 import type { UserSettings, StudyRecord, MockExamResult, UserSession } from "@/types";
 import Header from "@/components/layout/Header";
 import Flame from "@/components/Flame";
+import Roadmap from "@/components/dashboard/Roadmap";
+import AppLaunchPopup from "@/components/dashboard/AppLaunchPopup";
 import type1 from "@/data/type1_business_casual.json";
 import type2 from "@/data/type2_opinion.json";
 import type3 from "@/data/type3_visual.json";
@@ -81,9 +83,11 @@ export default function DashboardPage() {
             📘 HChat 연동법
           </a>
         </div>
-        <p className="text-teczen-gray-600 mb-8">
+        <p className="text-teczen-gray-600 mb-6">
           시간·장소 구애받지 않아요. 본인 등급에 맞춘 SPA 학습.
         </p>
+
+        <Roadmap />
 
         <div className="flex gap-1 border-b border-teczen-gray-200 mb-8 overflow-x-auto">
           <TabBtn active={activeTab === "home"} onClick={() => setActiveTab("home")}>
@@ -313,6 +317,7 @@ export default function DashboardPage() {
         )}
       </main>
 
+      <AppLaunchPopup />
       {selectedRecord && (
         <RecordDetailModal record={selectedRecord} onClose={() => setSelectedRecord(null)} />
       )}

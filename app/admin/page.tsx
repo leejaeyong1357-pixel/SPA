@@ -153,8 +153,8 @@ export default function AdminPage() {
   const top5 = useMemo(() => {
     if (!mounted) return [];
     return [...allLearners]
-      .filter((l) => l.status !== "not_started" && l.recentScore > 0)
-      .sort((a, b) => b.recentScore - a.recentScore)
+      .filter((l) => l.totalProblems > 0)
+      .sort((a, b) => b.totalProblems - a.totalProblems || b.mockExamCount - a.mockExamCount)
       .slice(0, 5);
   }, [mounted, allLearners]);
 
@@ -186,18 +186,25 @@ export default function AdminPage() {
           </div>
         </div>
 
-        <div className="grid md:grid-cols-5 gap-4 mb-6">
+        <div className="grid md:grid-cols-4 gap-4 mb-6">
           <StatCard label="전체 임직원" value={`${stats.total}명`} sub={`${allTeams.length}개 팀`} accent="navy" />
           <StatCard label="학습 시작" value={`${stats.started}명`} sub={`참여율 ${Math.round((stats.started / stats.total) * 100)}%`} accent="navy" />
-          <StatCard label="평균 점수" value={`${stats.avgScore}점`} sub="학습 시작자 기준" accent="navy" />
-          <StatCard label="목표 도달자" value={`${stats.targetReached}명`} sub={`달성률 ${stats.started > 0 ? Math.round((stats.targetReached / stats.started) * 100) : 0}%`} accent="red" />
+          <StatCard label="이번 주 활동" value={`${stats.active}명`} sub={`활동률 ${stats.started > 0 ? Math.round((stats.active / stats.started) * 100) : 0}%`} accent="red" />
           <StatCard label="🔥 평균 불꽃" value={`Lv ${avgFlame}`} sub={`켜진 불꽃 ${allWithFlame.length}명`} accent="navy" />
+        </div>
+        <div className="mb-6 px-4 py-3 bg-teczen-blue/5 border border-teczen-blue/20 rounded-2xl text-xs text-teczen-gray-700 flex items-start gap-2">
+          <span className="text-base leading-none">🔒</span>
+          <div>
+            <b className="text-teczen-blue">개인 점수·등급·답변은 관리자에게 노출되지 않습니다.</b>
+            <br />
+            여기서는 부서별 사용량과 참여율만 확인할 수 있습니다.
+          </div>
         </div>
 
         <div className="bg-white rounded-3xl p-6 border border-teczen-gray-200 mb-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="font-bold text-lg text-teczen-ink">🏆 우수 학습자 TOP 5</h2>
-            <span className="text-xs text-teczen-gray-500">최근 모의고사 점수 기준</span>
+            <h2 className="font-bold text-lg text-teczen-ink">🙌 참여도 TOP 5</h2>
+            <span className="text-xs text-teczen-gray-500">학습량 기준 (점수 비공개)</span>
           </div>
           <div className="space-y-2">
             {top5.length === 0 ? (
@@ -229,17 +236,11 @@ export default function AdminPage() {
                     <div className="flex items-center gap-2">
                       <span className="font-bold text-teczen-ink">{l.name}</span>
                       <span className="text-xs text-teczen-gray-500">
-                        {l.team} · {l.position} ({l.grade})
+                        {l.team} · {l.position}
                       </span>
                     </div>
                     <div className="text-xs text-teczen-gray-600">
-                      목표 Lv {l.targetLevel} · 학습 {l.totalProblems}문제 · 모의고사 {l.mockExamCount}회
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <div className="font-brand text-2xl text-teczen-navy">{l.recentScore}</div>
-                    <div className="text-xs text-teczen-gray-500">
-                      {l.estimatedLevel ? levelLabel(l.estimatedLevel as any) : "—"}
+                      학습 {l.totalProblems}문제 · 모의고사 {l.mockExamCount}회
                     </div>
                   </div>
                 </div>
@@ -323,10 +324,6 @@ export default function AdminPage() {
                   <th className="text-left py-2 px-2">팀 / 직위 / 직급</th>
                   <th className="text-center py-2 px-2">상태</th>
                   <th className="text-center py-2 px-2">🔥 불꽃</th>
-                  <th className="text-center py-2 px-2">목표</th>
-                  <th className="text-center py-2 px-2">현재</th>
-                  <th className="text-right py-2 px-2">평균</th>
-                  <th className="text-right py-2 px-2">최근</th>
                   <th className="text-right py-2 px-2">문제</th>
                   <th className="text-right py-2 px-2">모의고사</th>
                   <th className="text-right py-2 px-2">접속</th>
@@ -362,28 +359,6 @@ export default function AdminPage() {
                       ) : (
                         <span className="text-teczen-gray-400">—</span>
                       )}
-                    </td>
-                    <td className="py-2 px-2 text-center font-bold text-teczen-navy">
-                      {l.targetLevel ? `Lv ${l.targetLevel}` : "—"}
-                    </td>
-                    <td className="py-2 px-2 text-center">
-                      {l.estimatedLevel ? (
-                        <span
-                          className={
-                            l.targetLevel && l.estimatedLevel >= l.targetLevel
-                              ? "text-green-600 font-bold"
-                              : "text-teczen-gray-700"
-                          }
-                        >
-                          Lv {l.estimatedLevel}
-                        </span>
-                      ) : (
-                        <span className="text-teczen-gray-400">—</span>
-                      )}
-                    </td>
-                    <td className="py-2 px-2 text-right font-mono">{l.averageScore || "—"}</td>
-                    <td className="py-2 px-2 text-right font-mono font-bold text-teczen-navy">
-                      {l.recentScore || "—"}
                     </td>
                     <td className="py-2 px-2 text-right text-teczen-gray-700">{l.totalProblems || "—"}</td>
                     <td className="py-2 px-2 text-right text-teczen-gray-700">
