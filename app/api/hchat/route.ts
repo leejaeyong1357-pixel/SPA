@@ -1,7 +1,24 @@
 import { NextResponse } from "next/server";
-import { endpointForModel } from "@/lib/constants";
+import { getOptionalRequestContext } from "@cloudflare/next-on-pages";
+import { endpointForModel, HCHAT_BASE_URL } from "@/lib/constants";
 
 export const runtime = "edge";
+
+/**
+ * 사내 HChat 게이트웨이(internal-apigw-kr.hmg-corp.io) 는 외부 클라우드에서 못 들어감.
+ * 24/7 회사 PC 에서 돌리는 Cloudflare Tunnel(예: xxx.trycloudflare.com) URL 을
+ * 환경변수 HCHAT_TUNNEL_URL 에 넣으면 자동으로 그 URL 로 프록시.
+ *   - HCHAT_TUNNEL_URL 미설정 → 기존처럼 내부 URL 사용(로컬 개발용)
+ *   - HCHAT_TUNNEL_URL 설정 → 그 URL 로 라우팅(외부 클라우드 배포용)
+ */
+function resolveBase(originalEndpoint: string): string {
+  const ctx = getOptionalRequestContext();
+  const tunnel = (ctx?.env as any)?.HCHAT_TUNNEL_URL as string | undefined;
+  if (!tunnel) return originalEndpoint;
+  // 원본 path 를 그대로 유지: /hchat-in/api/v3/claude 등
+  const base = originalEndpoint.replace(/^https?:\/\/[^/]+/, "");
+  return tunnel.replace(/\/$/, "") + base;
+}
 
 interface ProxyRequest {
   apiKey: string;
@@ -26,7 +43,7 @@ export async function POST(req: Request) {
   }
 
   const selectedModel = model || "claude-sonnet-4-6";
-  const endpoint = endpointForModel(selectedModel);
+  const endpoint = resolveBase(endpointForModel(selectedModel));
   const provider: "anthropic" | "openai" = selectedModel.startsWith("claude") ? "anthropic" : "openai";
 
   const url =
