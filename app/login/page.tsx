@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { storage } from "@/lib/storage";
+import { hashPassword, getStoredPwHash, setStoredPwHash } from "@/lib/passwordStore";
+import { pullUserFromServer } from "@/lib/userSync";
 import Button from "@/components/ui/Button";
 
 // 코드 노출 시 평문 추출 방지를 위해 SHA-256 해시로 저장
@@ -25,6 +27,7 @@ export default function LoginPage() {
   const [mode, setMode] = useState<"user" | "admin">("user");
   const [name, setName] = useState("");
   const [employeeId, setEmployeeId] = useState("");
+  const [userPw, setUserPw] = useState("");
   const [adminPw, setAdminPw] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -47,36 +50,72 @@ export default function LoginPage() {
     const trimmedId = employeeId.trim();
     const trimmedName = name.trim();
     if (!trimmedName || !trimmedId) {
-      setError("사번과 이름을 입력해주세요.");
+      setError("이름과 사번을 입력해주세요.");
+      return;
+    }
+    if (!userPw) {
+      setError("비밀번호를 입력해주세요.");
       return;
     }
 
     setLoading(true);
-
-    // 서버 측 검증 — employees.json은 서버에만 있고 클라이언트로 안 내려옴.
-    // 주민번호는 시스템에 없으며, 사번+이름만 검증됩니다.
     try {
+      // 1) 직원 정보 검증
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name: trimmedName, employeeId: trimmedId }),
       });
       const data = await res.json();
-      setLoading(false);
       if (!data.ok) {
-        setError(data.error || "로그인 실패");
+        setLoading(false);
+        setError(data.error || "이름과 사번이 일치하지 않습니다.");
         return;
       }
       const u = data.user;
+      const serverId = String(u.employeeId);
+
+      // 2) 비번 해시 확인 — 로컬에 없으면 서버(KV)에서 가져옴
+      let storedHash = getStoredPwHash(serverId);
+      if (!storedHash) {
+        try {
+          const r = await fetch(
+            `/api/user-settings?employeeId=${encodeURIComponent(serverId)}`,
+            { cache: "no-store" },
+          );
+          const j = await r.json();
+          if (j?.data?.pwHash) {
+            storedHash = j.data.pwHash as string;
+            setStoredPwHash(serverId, storedHash);
+          }
+        } catch {}
+      }
+      if (!storedHash) {
+        setLoading(false);
+        setError("등록된 비밀번호가 없습니다. '등록하기'로 먼저 등록해주세요.");
+        return;
+      }
+
+      const inputHash = await hashPassword(userPw);
+      if (inputHash !== storedHash) {
+        setLoading(false);
+        setError("비밀번호가 일치하지 않습니다.");
+        return;
+      }
+
+      // 3) 세션 저장 + 서버에서 설정 복원
       storage.saveSession({
         name: u.name,
-        employeeId: String(u.employeeId),
+        employeeId: serverId,
         rrnFront: "",
         team: u.team,
         position: u.position,
         loggedInAt: Date.now(),
         isAdmin: false,
       });
+      await pullUserFromServer(serverId);
+
+      setLoading(false);
       navigateAfterLogin();
     } catch (err: any) {
       setLoading(false);
@@ -129,7 +168,7 @@ export default function LoginPage() {
           />
           <h1 className="font-brand text-3xl text-teczen-navy mb-1">SPEAKZEN</h1>
           <p className="text-sm text-teczen-gray-600">
-            {mode === "user" ? "사번과 이름으로 로그인하세요" : "관리자 인증"}
+            {mode === "user" ? "이름·사번·비밀번호로 로그인하세요" : "관리자 인증"}
           </p>
         </div>
 
@@ -153,6 +192,7 @@ export default function LoginPage() {
               setError("");
               setName("");
               setEmployeeId("");
+              setUserPw("");
             }}
             className={`flex-1 py-2 text-sm font-bold rounded-full transition-all ${
               mode === "admin" ? "bg-white text-teczen-navy shadow-sm" : "text-teczen-gray-500"
@@ -186,6 +226,17 @@ export default function LoginPage() {
               />
             </div>
 
+            <div>
+              <label className="block text-xs font-bold text-teczen-gray-700 mb-1.5">비밀번호</label>
+              <input
+                type="password"
+                value={userPw}
+                onChange={(e) => setUserPw(e.target.value)}
+                placeholder="등록 시 설정한 비밀번호"
+                className="w-full border-2 border-teczen-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-teczen-navy transition-colors"
+              />
+            </div>
+
             {error && (
               <div className="text-sm text-teczen-red bg-teczen-red/5 border border-teczen-red/20 p-3 rounded-xl">
                 {error}
@@ -197,7 +248,10 @@ export default function LoginPage() {
             </Button>
 
             <div className="text-center text-xs text-teczen-gray-500">
-              현대자동차그룹 임직원만 사용 가능합니다.
+              처음이신가요?{" "}
+              <Link href="/signup" className="text-teczen-navy font-bold underline">
+                등록하기
+              </Link>
             </div>
           </form>
         ) : (

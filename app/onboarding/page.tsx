@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { storage } from "@/lib/storage";
+import { pushUserToServer } from "@/lib/userSync";
 import Button from "@/components/ui/Button";
 
 const SECTIONS = [
@@ -126,6 +127,7 @@ export default function OnboardingPage() {
       onboardingSeen: true,
       onboardingSkipForever: skipForever,
     });
+    pushUserToServer();
     if (!settings.setupCompleted) {
       router.push("/setup");
     } else {

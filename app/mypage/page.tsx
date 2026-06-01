@@ -4,15 +4,13 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { storage } from "@/lib/storage";
+import { hashPassword, getStoredPwHash, setStoredPwHash } from "@/lib/passwordStore";
+import { pushUserToServer } from "@/lib/userSync";
 import { LEVEL_RANGES, getDaysUntil, levelLabel } from "@/lib/scoring";
 import { testConnection } from "@/lib/hchat";
 import type { Level, UserSession, UserSettings } from "@/types";
 import Header from "@/components/layout/Header";
 import Button from "@/components/ui/Button";
-
-function getPasswordKey(employeeId: string) {
-  return `spa.pw.${employeeId}`;
-}
 
 export default function MyPage() {
   const router = useRouter();
@@ -72,20 +70,23 @@ export default function MyPage() {
       hchatApiKey,
       hchatModel,
     });
+    pushUserToServer();
     setSaveMsg("✓ 저장되었습니다");
     setTimeout(() => setSaveMsg(""), 2000);
   };
 
-  const changePassword = (e: React.FormEvent) => {
+  const changePassword = async (e: React.FormEvent) => {
     e.preventDefault();
     setPwMsg(null);
 
-    const stored = localStorage.getItem(getPasswordKey(session.employeeId));
+    const storedHash = getStoredPwHash(session.employeeId);
 
-    // 비밀번호가 아직 없으면(최초 설정) 현재 비밀번호 검증 생략
-    if (stored && currentPw !== stored) {
-      setPwMsg({ ok: false, text: "현재 비밀번호가 일치하지 않습니다." });
-      return;
+    if (storedHash) {
+      const currentHash = await hashPassword(currentPw);
+      if (currentHash !== storedHash) {
+        setPwMsg({ ok: false, text: "현재 비밀번호가 일치하지 않습니다." });
+        return;
+      }
     }
     if (newPw.length < 6) {
       setPwMsg({ ok: false, text: "새 비밀번호는 6자 이상이어야 합니다." });
@@ -100,8 +101,9 @@ export default function MyPage() {
       return;
     }
 
-    localStorage.setItem(getPasswordKey(session.employeeId), newPw);
-    storage.saveSession({ ...session, rrnFront: newPw });
+    const newHash = await hashPassword(newPw);
+    setStoredPwHash(session.employeeId, newHash);
+    pushUserToServer();
     setCurrentPw("");
     setNewPw("");
     setConfirmPw("");

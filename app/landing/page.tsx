@@ -26,12 +26,20 @@ export default function LandingPage() {
             <span className="text-teczen-gray-300">|</span>
             <span className="font-brand text-lg text-teczen-navy tracking-tight">SPEAKZEN</span>
           </div>
-          <Link
-            href="/login"
-            className="px-4 py-2 bg-teczen-blue text-white text-sm font-bold rounded-full hover:bg-blue-700 transition-colors"
-          >
-            로그인하기 →
-          </Link>
+          <div className="flex items-center gap-2">
+            <Link
+              href="/signup"
+              className="px-4 py-2 bg-teczen-blue text-white text-sm font-bold rounded-full hover:bg-blue-700 transition-colors"
+            >
+              등록하기
+            </Link>
+            <Link
+              href="/login"
+              className="px-4 py-2 border border-teczen-gray-300 text-teczen-ink text-sm font-bold rounded-full hover:border-teczen-navy hover:text-teczen-navy transition-colors"
+            >
+              로그인 →
+            </Link>
+          </div>
         </div>
       </header>
 
@@ -54,12 +62,18 @@ export default function LandingPage() {
               <br />
               <span className="font-bold text-teczen-ink">한 등급 위로</span>.
             </p>
-            <div className="flex gap-3 justify-center">
+            <div className="flex gap-3 justify-center flex-wrap">
               <Link
-                href="/login"
+                href="/signup"
                 className="px-8 py-4 bg-teczen-navy text-white font-bold rounded-full hover:bg-teczen-navy-dark transition-all hover:shadow-xl"
               >
-                지금 시작하기 →
+                등록하고 시작하기 →
+              </Link>
+              <Link
+                href="/login"
+                className="px-8 py-4 border-2 border-teczen-navy text-teczen-navy font-bold rounded-full hover:bg-teczen-navy hover:text-white transition-colors"
+              >
+                로그인
               </Link>
               <a
                 href="#features"
@@ -170,14 +184,22 @@ export default function LandingPage() {
             준비되셨나요?
           </h2>
           <p className="text-teczen-gray-600 mb-8 text-lg">
-            사번과 이름으로 로그인하면 바로 시작됩니다.
+            처음이라면 <b>등록하기</b>, 이미 등록했다면 <b>로그인</b>.
           </p>
-          <Link
-            href="/login"
-            className="inline-block px-10 py-4 bg-teczen-red text-white font-bold rounded-full hover:bg-teczen-red-dark transition-all hover:shadow-xl text-lg"
-          >
-            로그인하고 시작하기 →
-          </Link>
+          <div className="flex gap-3 justify-center flex-wrap">
+            <Link
+              href="/signup"
+              className="inline-block px-10 py-4 bg-teczen-red text-white font-bold rounded-full hover:bg-teczen-red-dark transition-all hover:shadow-xl text-lg"
+            >
+              등록하기 →
+            </Link>
+            <Link
+              href="/login"
+              className="inline-block px-10 py-4 border-2 border-teczen-ink text-teczen-ink font-bold rounded-full hover:bg-teczen-ink hover:text-white transition-colors text-lg"
+            >
+              로그인
+            </Link>
+          </div>
         </div>
       </section>
 

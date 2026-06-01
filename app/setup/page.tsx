@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { storage } from "@/lib/storage";
+import { pushUserToServer } from "@/lib/userSync";
 import { LEVEL_RANGES, levelDescription } from "@/lib/scoring";
 import { testConnection } from "@/lib/hchat";
 import type { Level } from "@/types";
@@ -41,7 +42,9 @@ export default function SetupPage() {
   };
 
   const save = () => {
+    const existing = storage.getSettings();
     storage.saveSettings({
+      ...existing,
       examDate,
       targetLevel,
       hchatEndpoint: "",
@@ -49,6 +52,8 @@ export default function SetupPage() {
       hchatModel,
       setupCompleted: true,
     });
+    // 서버(KV)에도 백업 — 캐시 비워져도 다음 로그인 때 자동 복원
+    pushUserToServer();
     router.push("/loading-setup");
   };
 
