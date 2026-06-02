@@ -4,8 +4,10 @@ import { useState } from "react";
 import Link from "next/link";
 import type { AiFeedback, QuestionType } from "@/types";
 import { levelLabel, scoreToLevel } from "@/lib/scoring";
+import { storage } from "@/lib/storage";
 import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
+import ResultSheet from "@/components/dashboard/ResultSheet";
 
 const TYPE_NAMES: Record<QuestionType, { name: string; mission: string }> = {
   1: { name: "Business Casual", mission: "일상 Q&A" },
@@ -27,7 +29,8 @@ interface Props {
 }
 
 export default function MockSummary({ totalScore, answers, durationMs }: Props) {
-  const [activeTab, setActiveTab] = useState<"summary" | QuestionType>("summary");
+  const [activeTab, setActiveTab] = useState<"report" | "summary" | QuestionType>("report");
+  const session = storage.getSession();
   const allFeedbacks = ([1, 2, 3, 4] as QuestionType[])
     .map((t) => answers[t]?.feedback)
     .filter(Boolean) as AiFeedback[];
@@ -93,12 +96,32 @@ export default function MockSummary({ totalScore, answers, durationMs }: Props) 
       </Card>
 
       <div className="flex gap-2 overflow-x-auto pb-1">
-        {tabBtn("summary", "📋 종합")}
+        {tabBtn("report", "📄 결과지")}
+        {tabBtn("summary", "📋 종합 분석")}
         {([1, 2, 3, 4] as QuestionType[]).map((t) => {
           const s = answers[t]?.feedback?.scoreEstimate ?? 0;
           return tabBtn(t, `유형 ${t} · ${s}점`);
         })}
       </div>
+
+      {activeTab === "report" && (
+        <ResultSheet
+          data={{
+            name: session?.name || "학습자",
+            team: session?.team,
+            date: new Date().toISOString().slice(0, 10),
+            totalScore,
+            level: scoreToLevel(totalScore),
+            criteria: {
+              pronunciation: Math.round(criteriaAvg.pronunciation),
+              listening: Math.round(criteriaAvg.listening),
+              vocabulary: Math.round(criteriaAvg.vocabulary),
+              grammar: Math.round(criteriaAvg.grammar),
+              fluency: Math.round(criteriaAvg.fluency),
+            },
+          }}
+        />
+      )}
 
       {activeTab === "summary" && (
         <div className="space-y-4">

@@ -14,6 +14,7 @@ import Header from "@/components/layout/Header";
 import Flame from "@/components/Flame";
 import Roadmap from "@/components/dashboard/Roadmap";
 import AppLaunchPopup from "@/components/dashboard/AppLaunchPopup";
+import SampleResultModal from "@/components/dashboard/SampleResultModal";
 import type1 from "@/data/type1_business_casual.json";
 import type2 from "@/data/type2_opinion.json";
 import type3 from "@/data/type3_visual.json";
@@ -35,6 +36,7 @@ export default function DashboardPage() {
   const [activeTab, setActiveTab] = useState<"home" | "study" | "mock" | "stats">("home");
   const [selectedRecord, setSelectedRecord] = useState<StudyRecord | null>(null);
   const [showRanking, setShowRanking] = useState(false);
+  const [showSampleResult, setShowSampleResult] = useState(false);
 
   useEffect(() => {
     if (!storage.isLoggedIn()) {
@@ -76,14 +78,22 @@ export default function DashboardPage() {
                 <br />
                 <span className="highlight-blue">목표 등급</span>까지.
               </h1>
-              <a
-                href="/api/assets?key=api-key-guide"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="shrink-0 px-4 py-2.5 bg-teczen-blue text-white text-sm font-bold rounded-xl hover:bg-blue-700 transition-colors whitespace-nowrap shadow-sm"
-              >
-                📘 HChat 연동법
-              </a>
+              <div className="flex flex-col gap-2 shrink-0">
+                <a
+                  href="/api/assets?key=api-key-guide"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-4 py-2.5 bg-teczen-blue text-white text-sm font-bold rounded-xl hover:bg-blue-700 transition-colors whitespace-nowrap shadow-sm text-center"
+                >
+                  📘 HChat 연동법
+                </a>
+                <button
+                  onClick={() => setShowSampleResult(true)}
+                  className="px-4 py-2.5 bg-white border-2 border-teczen-blue text-teczen-blue text-sm font-bold rounded-xl hover:bg-teczen-blue/5 transition-colors whitespace-nowrap shadow-sm"
+                >
+                  📄 SPA 결과지 예시
+                </button>
+              </div>
             </div>
             <p className="text-teczen-gray-600">
               시간·장소 구애받지 않아요. 본인 등급에 맞춘 SPA 학습.
@@ -321,6 +331,7 @@ export default function DashboardPage() {
       </main>
 
       <AppLaunchPopup />
+      {showSampleResult && <SampleResultModal onClose={() => setShowSampleResult(false)} />}
       {selectedRecord && (
         <RecordDetailModal record={selectedRecord} onClose={() => setSelectedRecord(null)} />
       )}
