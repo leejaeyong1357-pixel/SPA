@@ -45,7 +45,7 @@ export default function SampleResultModal({ onClose }: { onClose: () => void }) 
               모의고사를 보면 <span className="text-teczen-blue">이런 결과지</span>를 제공해드려요
             </h2>
             <p className="text-sm text-teczen-gray-600 mt-2">
-              SPA 점수 기반 · CEFR 등급 · 6대 인증시험 환산 · 영역별 맞춤 학습 추천
+              SPA 96점 만점 · 영역별 점수 분석 · 맞춤 학습 추천
             </p>
           </div>
 

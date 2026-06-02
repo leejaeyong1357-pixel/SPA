@@ -25,8 +25,8 @@ const STAGES = [
   {
     num: 4,
     date: "2026.10",
-    title: "개인 커스터마이징 글로벌 영어 AI",
-    emoji: "🌐",
+    title: "개인맞춤형 AI 영어 비서 제작",
+    emoji: "🤖",
   },
   {
     num: 5,
@@ -103,10 +103,10 @@ export default function Roadmap() {
             );
           })}
 
-          {/* 움직이는 불꽃 캐릭터 */}
+          {/* 움직이는 불꽃 캐릭터 — 숫자 버튼 위에 떠 보이도록 z-30 */}
           <div
-            className="absolute left-[-4px] pointer-events-none transition-all duration-700 ease-in-out"
-            style={{ top: `${active * STEP_PX - 14}px` }}
+            className="absolute left-[-6px] z-30 pointer-events-none transition-all duration-700 ease-in-out drop-shadow-lg"
+            style={{ top: `${active * STEP_PX - 18}px` }}
           >
             <div className="flame-bobble">
               <Flame level={5} color="#FF6B35" size={56} />

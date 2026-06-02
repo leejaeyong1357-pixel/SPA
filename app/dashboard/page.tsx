@@ -71,33 +71,50 @@ export default function DashboardPage() {
           안녕하세요, <span className="font-bold text-teczen-ink">{session.name}</span>님
         </div>
         <div className="grid lg:grid-cols-[1fr_360px] gap-6 items-stretch mb-8">
-          <div className="flex flex-col">
-            <div className="flex items-start justify-between gap-3 mb-3 flex-wrap">
-              <h1 className="headline-xl text-teczen-ink">
-                언제 어디서든,
-                <br />
-                <span className="highlight-blue">목표 등급</span>까지.
-              </h1>
-              <div className="flex flex-col gap-2 shrink-0">
-                <a
-                  href="/api/assets?key=api-key-guide"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-4 py-2.5 bg-teczen-blue text-white text-sm font-bold rounded-xl hover:bg-blue-700 transition-colors whitespace-nowrap shadow-sm text-center"
-                >
-                  📘 HChat 연동법
-                </a>
-                <button
-                  onClick={() => setShowSampleResult(true)}
-                  className="px-4 py-2.5 bg-white border-2 border-teczen-blue text-teczen-blue text-sm font-bold rounded-xl hover:bg-teczen-blue/5 transition-colors whitespace-nowrap shadow-sm"
-                >
-                  📄 SPA 결과지 예시
-                </button>
+          <div className="flex flex-col gap-4">
+            <div>
+              <div className="flex items-start justify-between gap-3 mb-3 flex-wrap">
+                <h1 className="headline-xl text-teczen-ink">
+                  언제 어디서든,
+                  <br />
+                  <span className="highlight-blue">목표 등급</span>까지.
+                </h1>
+                <div className="flex flex-col gap-2 shrink-0">
+                  <a
+                    href="/api/assets?key=api-key-guide"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-4 py-2.5 bg-teczen-blue text-white text-sm font-bold rounded-xl hover:bg-blue-700 transition-colors whitespace-nowrap shadow-sm text-center"
+                  >
+                    📘 HChat 연동법
+                  </a>
+                  <button
+                    onClick={() => setShowSampleResult(true)}
+                    className="px-4 py-2.5 bg-white border-2 border-teczen-blue text-teczen-blue text-sm font-bold rounded-xl hover:bg-teczen-blue/5 transition-colors whitespace-nowrap shadow-sm"
+                  >
+                    📄 SPA 결과지 예시
+                  </button>
+                </div>
               </div>
+              <p className="text-teczen-gray-600">
+                시간·장소 구애받지 않아요. 본인 등급에 맞춘 SPA 학습.
+              </p>
             </div>
-            <p className="text-teczen-gray-600">
-              시간·장소 구애받지 않아요. 본인 등급에 맞춘 SPA 학습.
-            </p>
+            <div className="flex-1">
+              <FlameSection
+                compact
+                settings={settings}
+                onColorChange={(c) => {
+                  const flame = settings.flame
+                    ? { ...settings.flame, color: c }
+                    : { level: 0, streak: 0, lastStudyDay: "", color: c };
+                  const next = { ...settings, flame };
+                  storage.saveSettings(next);
+                  setSettings(next);
+                }}
+                onShowRanking={() => setShowRanking(true)}
+              />
+            </div>
           </div>
           <Roadmap />
         </div>
@@ -119,17 +136,6 @@ export default function DashboardPage() {
 
         {activeTab === "home" && (
           <div className="space-y-6">
-            <FlameSection
-              settings={settings}
-              onColorChange={(c) => {
-                const flame = settings.flame ? { ...settings.flame, color: c } : { level: 0, streak: 0, lastStudyDay: "", color: c };
-                const next = { ...settings, flame };
-                storage.saveSettings(next);
-                setSettings(next);
-              }}
-              onShowRanking={() => setShowRanking(true)}
-            />
-
             <div className="grid md:grid-cols-3 gap-4">
               <MetricCard
                 label="시험까지"
@@ -361,80 +367,142 @@ function FlameSection({
   settings,
   onColorChange,
   onShowRanking,
+  compact = false,
 }: {
   settings: UserSettings;
   onColorChange: (c: string) => void;
   onShowRanking: () => void;
+  compact?: boolean;
 }) {
   const flame = decayedFlame(settings.flame);
   const isLit = flame.level > 0;
   const color = flame.color || FLAME_COLORS[0].value;
+  const flameSize = compact ? 100 : 140;
 
   return (
-    <div className="bg-white rounded-2xl border border-teczen-gray-200 p-6 md:p-8">
-      <div className="grid md:grid-cols-[160px_1fr_auto] gap-6 items-center">
+    <div
+      className={`bg-white rounded-2xl border border-teczen-gray-200 ${
+        compact ? "p-5 h-full" : "p-6 md:p-8"
+      }`}
+    >
+      <div
+        className={
+          compact
+            ? "grid grid-cols-[100px_1fr] gap-4 items-center h-full"
+            : "grid md:grid-cols-[160px_1fr_auto] gap-6 items-center"
+        }
+      >
         <div className="flex justify-center">
-          <Flame level={flame.level} color={color} size={140} />
+          <Flame level={flame.level} color={color} size={flameSize} />
         </div>
 
-        <div className="text-center md:text-left">
+        <div className={compact ? "text-left" : "text-center md:text-left"}>
           {isLit ? (
             <>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-teczen-blue/10 text-teczen-blue text-xs font-bold mb-2">
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-teczen-blue/10 text-teczen-blue text-[11px] font-bold mb-1.5">
                 🔥 {flame.streak}일째 불꽃 키우는 중!
               </div>
-              <h2 className="text-2xl md:text-3xl font-black text-teczen-ink mb-1">
+              <h2
+                className={
+                  compact
+                    ? "text-lg font-black text-teczen-ink mb-1 leading-snug"
+                    : "text-2xl md:text-3xl font-black text-teczen-ink mb-1"
+                }
+              >
                 {flame.level >= MAX_FLAME_LEVEL ? (
                   <>불꽃이 <span className="highlight-blue">최고조</span>예요!</>
                 ) : (
                   <>불씨가 <span className="highlight-blue">점점 커져요!</span></>
                 )}
               </h2>
-              <p className="text-sm text-teczen-gray-600 mb-2">
+              <p
+                className={
+                  compact
+                    ? "text-xs text-teczen-gray-600 mb-2"
+                    : "text-sm text-teczen-gray-600 mb-2"
+                }
+              >
                 {flame.level >= MAX_FLAME_LEVEL
-                  ? `Lv ${flame.level} / ${MAX_FLAME_LEVEL} · 매일 한 문제씩 풀면 불꽃이 유지돼요.`
-                  : `Lv ${flame.level} / ${MAX_FLAME_LEVEL} · 오늘 한 문제만 더 풀면 다음 단계로! 하루라도 빠지면 한 단계 작아져요.`}
+                  ? `Lv ${flame.level} / ${MAX_FLAME_LEVEL} · 매일 한 문제씩 풀면 유지돼요.`
+                  : `Lv ${flame.level} / ${MAX_FLAME_LEVEL} · 오늘 한 문제만 더 풀면 다음 단계!`}
               </p>
             </>
           ) : (
             <>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-teczen-gray-100 text-teczen-gray-600 text-xs font-bold mb-2">
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-teczen-gray-100 text-teczen-gray-600 text-[11px] font-bold mb-1.5">
                 불꽃이 꺼져있어요
               </div>
-              <h2 className="text-2xl md:text-3xl font-black text-teczen-ink mb-1">
-                학습을 시작해서 <span className="highlight-blue">불꽃을 키워주세요!</span>
+              <h2
+                className={
+                  compact
+                    ? "text-lg font-black text-teczen-ink mb-1 leading-snug"
+                    : "text-2xl md:text-3xl font-black text-teczen-ink mb-1"
+                }
+              >
+                학습 시작해서 <span className="highlight-blue">불꽃을 키워요!</span>
               </h2>
-              <p className="text-sm text-teczen-gray-600">
-                하루에 한 문제씩 학습하면 불꽃이 커집니다 (최대 {MAX_FLAME_LEVEL}단계)
+              <p
+                className={
+                  compact
+                    ? "text-xs text-teczen-gray-600 mb-2"
+                    : "text-sm text-teczen-gray-600"
+                }
+              >
+                하루 한 문제씩 학습하면 불꽃이 커집니다 (최대 {MAX_FLAME_LEVEL}단계)
               </p>
             </>
           )}
+          {compact && (
+            <div className="flex items-center justify-between gap-2 mt-2 pt-2 border-t border-teczen-gray-100">
+              <div className="flex gap-1">
+                {FLAME_COLORS.map((c) => (
+                  <button
+                    key={c.value}
+                    onClick={() => onColorChange(c.value)}
+                    title={c.name}
+                    className={`w-4 h-4 rounded-full transition-transform hover:scale-110 ${
+                      color === c.value ? "ring-2 ring-offset-1 ring-teczen-ink" : ""
+                    }`}
+                    style={{ background: c.value }}
+                  />
+                ))}
+              </div>
+              <button
+                onClick={onShowRanking}
+                className="px-2.5 py-1.5 bg-teczen-blue text-white text-[11px] font-bold rounded-lg hover:bg-blue-700 whitespace-nowrap"
+              >
+                🏆 불꽃 랭킹 →
+              </button>
+            </div>
+          )}
         </div>
 
-        <div className="flex md:flex-col gap-3 items-center md:items-end">
-          <div className="flex md:flex-col gap-2 items-center">
-            <span className="text-xs text-teczen-gray-500">색상</span>
-            <div className="flex md:flex-col gap-1.5">
-              {FLAME_COLORS.map((c) => (
-                <button
-                  key={c.value}
-                  onClick={() => onColorChange(c.value)}
-                  title={c.name}
-                  className={`w-6 h-6 rounded-full transition-transform hover:scale-110 ${
-                    color === c.value ? "ring-2 ring-offset-1 ring-teczen-ink" : ""
-                  }`}
-                  style={{ background: c.value }}
-                />
-              ))}
+        {!compact && (
+          <div className="flex md:flex-col gap-3 items-center md:items-end">
+            <div className="flex md:flex-col gap-2 items-center">
+              <span className="text-xs text-teczen-gray-500">색상</span>
+              <div className="flex md:flex-col gap-1.5">
+                {FLAME_COLORS.map((c) => (
+                  <button
+                    key={c.value}
+                    onClick={() => onColorChange(c.value)}
+                    title={c.name}
+                    className={`w-6 h-6 rounded-full transition-transform hover:scale-110 ${
+                      color === c.value ? "ring-2 ring-offset-1 ring-teczen-ink" : ""
+                    }`}
+                    style={{ background: c.value }}
+                  />
+                ))}
+              </div>
             </div>
+            <button
+              onClick={onShowRanking}
+              className="px-3 py-2 bg-teczen-blue text-white text-xs font-bold rounded-lg hover:bg-blue-700 whitespace-nowrap"
+            >
+              🏆 불꽃 랭킹 →
+            </button>
           </div>
-          <button
-            onClick={onShowRanking}
-            className="px-3 py-2 bg-teczen-blue text-white text-xs font-bold rounded-lg hover:bg-blue-700 whitespace-nowrap"
-          >
-            🏆 불꽃 랭킹 →
-          </button>
-        </div>
+        )}
       </div>
     </div>
   );
