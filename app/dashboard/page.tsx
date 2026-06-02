@@ -68,26 +68,29 @@ export default function DashboardPage() {
         <div className="mb-2 text-sm text-teczen-gray-500">
           안녕하세요, <span className="font-bold text-teczen-ink">{session.name}</span>님
         </div>
-        <div className="flex items-start justify-between gap-4 mb-2">
-          <h1 className="headline-xl text-teczen-ink">
-            언제 어디서든,
-            <br />
-            <span className="highlight-blue">목표 등급</span>까지.
-          </h1>
-          <a
-            href="/api/assets?key=api-key-guide"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="shrink-0 px-4 py-2.5 bg-teczen-blue text-white text-sm font-bold rounded-xl hover:bg-blue-700 transition-colors whitespace-nowrap shadow-sm"
-          >
-            📘 HChat 연동법
-          </a>
+        <div className="grid lg:grid-cols-[1fr_360px] gap-6 items-stretch mb-8">
+          <div className="flex flex-col">
+            <div className="flex items-start justify-between gap-3 mb-3 flex-wrap">
+              <h1 className="headline-xl text-teczen-ink">
+                언제 어디서든,
+                <br />
+                <span className="highlight-blue">목표 등급</span>까지.
+              </h1>
+              <a
+                href="/api/assets?key=api-key-guide"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="shrink-0 px-4 py-2.5 bg-teczen-blue text-white text-sm font-bold rounded-xl hover:bg-blue-700 transition-colors whitespace-nowrap shadow-sm"
+              >
+                📘 HChat 연동법
+              </a>
+            </div>
+            <p className="text-teczen-gray-600">
+              시간·장소 구애받지 않아요. 본인 등급에 맞춘 SPA 학습.
+            </p>
+          </div>
+          <Roadmap />
         </div>
-        <p className="text-teczen-gray-600 mb-6">
-          시간·장소 구애받지 않아요. 본인 등급에 맞춘 SPA 학습.
-        </p>
-
-        <Roadmap />
 
         <div className="flex gap-1 border-b border-teczen-gray-200 mb-8 overflow-x-auto">
           <TabBtn active={activeTab === "home"} onClick={() => setActiveTab("home")}>
