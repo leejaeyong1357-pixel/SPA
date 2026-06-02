@@ -377,18 +377,18 @@ function FlameSection({
   const flame = decayedFlame(settings.flame);
   const isLit = flame.level > 0;
   const color = flame.color || FLAME_COLORS[0].value;
-  const flameSize = compact ? 100 : 140;
+  const flameSize = compact ? 130 : 140;
 
   return (
     <div
       className={`bg-white rounded-2xl border border-teczen-gray-200 ${
-        compact ? "p-5 h-full" : "p-6 md:p-8"
+        compact ? "p-6 h-full" : "p-6 md:p-8"
       }`}
     >
       <div
         className={
           compact
-            ? "grid grid-cols-[100px_1fr] gap-4 items-center h-full"
+            ? "grid grid-cols-[130px_1fr] gap-5 items-center h-full"
             : "grid md:grid-cols-[160px_1fr_auto] gap-6 items-center"
         }
       >
@@ -399,13 +399,13 @@ function FlameSection({
         <div className={compact ? "text-left" : "text-center md:text-left"}>
           {isLit ? (
             <>
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-teczen-blue/10 text-teczen-blue text-[11px] font-bold mb-1.5">
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-teczen-blue/10 text-teczen-blue text-xs font-bold mb-2">
                 🔥 {flame.streak}일째 불꽃 키우는 중!
               </div>
               <h2
                 className={
                   compact
-                    ? "text-lg font-black text-teczen-ink mb-1 leading-snug"
+                    ? "text-xl md:text-2xl font-black text-teczen-ink mb-1 leading-snug"
                     : "text-2xl md:text-3xl font-black text-teczen-ink mb-1"
                 }
               >
@@ -418,49 +418,47 @@ function FlameSection({
               <p
                 className={
                   compact
-                    ? "text-xs text-teczen-gray-600 mb-2"
+                    ? "text-sm text-teczen-gray-600 mb-2"
                     : "text-sm text-teczen-gray-600 mb-2"
                 }
               >
-                {flame.level >= MAX_FLAME_LEVEL
-                  ? `Lv ${flame.level} / ${MAX_FLAME_LEVEL} · 매일 한 문제씩 풀면 유지돼요.`
-                  : `Lv ${flame.level} / ${MAX_FLAME_LEVEL} · 오늘 한 문제만 더 풀면 다음 단계!`}
+                Lv {flame.level} / {MAX_FLAME_LEVEL} · 오늘 한 문제만 더 풀면 다음 단계!
+              </p>
+              <p className="text-xs font-bold text-teczen-red">
+                ⚠ 하루라도 학습하지 않으면 불꽃이 사라져요!
               </p>
             </>
           ) : (
             <>
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-teczen-gray-100 text-teczen-gray-600 text-[11px] font-bold mb-1.5">
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-teczen-gray-100 text-teczen-gray-600 text-xs font-bold mb-2">
                 불꽃이 꺼져있어요
               </div>
               <h2
                 className={
                   compact
-                    ? "text-lg font-black text-teczen-ink mb-1 leading-snug"
+                    ? "text-xl md:text-2xl font-black text-teczen-ink mb-1 leading-snug"
                     : "text-2xl md:text-3xl font-black text-teczen-ink mb-1"
                 }
               >
                 학습 시작해서 <span className="highlight-blue">불꽃을 키워요!</span>
               </h2>
-              <p
-                className={
-                  compact
-                    ? "text-xs text-teczen-gray-600 mb-2"
-                    : "text-sm text-teczen-gray-600"
-                }
-              >
+              <p className="text-sm text-teczen-gray-600 mb-2">
                 하루 한 문제씩 학습하면 불꽃이 커집니다 (최대 {MAX_FLAME_LEVEL}단계)
+              </p>
+              <p className="text-xs font-bold text-teczen-red">
+                ⚠ 하루라도 학습하지 않으면 불꽃이 사라져요!
               </p>
             </>
           )}
           {compact && (
-            <div className="flex items-center justify-between gap-2 mt-2 pt-2 border-t border-teczen-gray-100">
-              <div className="flex gap-1">
+            <div className="flex items-center justify-between gap-2 mt-3 pt-3 border-t border-teczen-gray-100">
+              <div className="flex gap-1.5">
                 {FLAME_COLORS.map((c) => (
                   <button
                     key={c.value}
                     onClick={() => onColorChange(c.value)}
                     title={c.name}
-                    className={`w-4 h-4 rounded-full transition-transform hover:scale-110 ${
+                    className={`w-5 h-5 rounded-full transition-transform hover:scale-110 ${
                       color === c.value ? "ring-2 ring-offset-1 ring-teczen-ink" : ""
                     }`}
                     style={{ background: c.value }}
@@ -469,7 +467,7 @@ function FlameSection({
               </div>
               <button
                 onClick={onShowRanking}
-                className="px-2.5 py-1.5 bg-teczen-blue text-white text-[11px] font-bold rounded-lg hover:bg-blue-700 whitespace-nowrap"
+                className="px-3 py-1.5 bg-teczen-blue text-white text-xs font-bold rounded-lg hover:bg-blue-700 whitespace-nowrap"
               >
                 🏆 불꽃 랭킹 →
               </button>

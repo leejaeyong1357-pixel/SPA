@@ -327,6 +327,7 @@ export default function AdminPage() {
                   <th className="text-right py-2 px-2">문제</th>
                   <th className="text-right py-2 px-2">모의고사</th>
                   <th className="text-right py-2 px-2">접속</th>
+                  <th className="text-center py-2 px-2">비밀번호</th>
                 </tr>
               </thead>
               <tbody>
@@ -366,6 +367,9 @@ export default function AdminPage() {
                     </td>
                     <td className="py-2 px-2 text-right text-xs text-teczen-gray-500">
                       {l.lastActiveAt ? new Date(l.lastActiveAt).toLocaleDateString("ko-KR") : "—"}
+                    </td>
+                    <td className="py-2 px-2">
+                      <PasswordCell employeeId={l.employeeId} name={l.name} />
                     </td>
                   </tr>
                 ))}
@@ -506,6 +510,118 @@ function AssetUploader({
         >
           {msg.text}
         </div>
+      )}
+    </div>
+  );
+}
+
+function PasswordCell({ employeeId, name }: { employeeId: string; name: string }) {
+  const [busy, setBusy] = useState(false);
+  const [editing, setEditing] = useState(false);
+  const [newPw, setNewPw] = useState("");
+  const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
+
+  const doReset = async () => {
+    if (!confirm(`${name} 학습자의 비밀번호를 초기화할까요?\n다음 로그인 때 '등록하기'로 재등록 필요`)) return;
+    setBusy(true);
+    setMsg(null);
+    try {
+      const res = await fetch(
+        `/api/admin/user-password?employeeId=${encodeURIComponent(employeeId)}`,
+        { method: "DELETE" },
+      );
+      const data = await res.json();
+      setMsg(data.ok ? { ok: true, text: "✓ 초기화됨" } : { ok: false, text: data.error || "실패" });
+    } catch {
+      setMsg({ ok: false, text: "네트워크 오류" });
+    }
+    setBusy(false);
+    setTimeout(() => setMsg(null), 2500);
+  };
+
+  const doChange = async () => {
+    if (newPw.length < 6) {
+      setMsg({ ok: false, text: "6자 이상" });
+      return;
+    }
+    setBusy(true);
+    setMsg(null);
+    try {
+      const res = await fetch("/api/admin/user-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ employeeId, newPassword: newPw }),
+      });
+      const data = await res.json();
+      if (data.ok) {
+        setMsg({ ok: true, text: "✓ 변경됨" });
+        setNewPw("");
+        setEditing(false);
+      } else {
+        setMsg({ ok: false, text: data.error || "실패" });
+      }
+    } catch {
+      setMsg({ ok: false, text: "네트워크 오류" });
+    }
+    setBusy(false);
+    setTimeout(() => setMsg(null), 2500);
+  };
+
+  if (editing) {
+    return (
+      <div className="flex items-center gap-1">
+        <input
+          type="text"
+          value={newPw}
+          onChange={(e) => setNewPw(e.target.value)}
+          placeholder="새 비번"
+          className="w-20 text-xs border border-teczen-gray-300 rounded px-1.5 py-1 focus:outline-none focus:border-teczen-blue"
+          autoFocus
+        />
+        <button
+          onClick={doChange}
+          disabled={busy}
+          className="text-[10px] font-bold px-1.5 py-1 bg-teczen-blue text-white rounded hover:bg-blue-700 disabled:opacity-50"
+        >
+          저장
+        </button>
+        <button
+          onClick={() => {
+            setEditing(false);
+            setNewPw("");
+          }}
+          className="text-[10px] text-teczen-gray-500 hover:text-teczen-ink"
+        >
+          취소
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex items-center gap-1 justify-center">
+      <button
+        onClick={() => setEditing(true)}
+        disabled={busy}
+        className="text-[10px] font-bold px-2 py-1 bg-teczen-blue/10 text-teczen-blue rounded hover:bg-teczen-blue/20 disabled:opacity-50"
+      >
+        변경
+      </button>
+      <button
+        onClick={doReset}
+        disabled={busy}
+        className="text-[10px] font-bold px-2 py-1 bg-teczen-red/10 text-teczen-red rounded hover:bg-teczen-red/20 disabled:opacity-50"
+      >
+        초기화
+      </button>
+      {msg && (
+        <span
+          className={`text-[10px] font-bold ${
+            msg.ok ? "text-green-700" : "text-teczen-red"
+          }`}
+        >
+          {msg.text}
+        </span>
       )}
     </div>
   );

@@ -39,6 +39,10 @@ const NOTICES = [
         <div className="mt-4 p-3 bg-teczen-blue/10 border border-teczen-blue/30 rounded-xl text-sm">
           <b className="text-teczen-blue">걱정 없이 마음껏 사용</b>하셔도 됩니다.
         </div>
+        <p className="text-[11px] text-teczen-gray-500 mt-3 leading-relaxed">
+          ※ 본 서비스는 <b>ICT와 함께 보안 및 개인정보 보호 기준</b>에 따라 안전하게 운영 및
+          관리됩니다.
+        </p>
       </>
     ),
   },

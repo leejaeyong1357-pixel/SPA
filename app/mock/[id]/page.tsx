@@ -264,7 +264,23 @@ export default function MockExamPage() {
         )}
         {currentType === 3 && cq.subtype === "photo" && (
           <Card className="mb-4">
-            <img src={cq.image_url} alt="" className="w-full max-h-80 object-cover rounded-xl" />
+            <div className="mb-2 flex items-center justify-between">
+              <span className="text-xs font-semibold text-teczen-red">PHOTO</span>
+              <span className="text-[11px] font-bold text-teczen-blue">
+                👥 사람과 그들의 행동을 중심으로 묘사하세요
+              </span>
+            </div>
+            {cq.image_url && (
+              <img src={cq.image_url} alt="" className="w-full max-h-80 object-cover rounded-xl" />
+            )}
+            {cq.image_description && (
+              <div className="mt-3 p-3 bg-teczen-blue/5 border border-teczen-blue/20 rounded-xl">
+                <div className="text-[10px] font-black tracking-wider text-teczen-blue mb-1">
+                  📝 SCENE DESCRIPTION
+                </div>
+                <p className="text-sm text-teczen-ink leading-relaxed">{cq.image_description}</p>
+              </div>
+            )}
           </Card>
         )}
 
@@ -279,7 +295,7 @@ export default function MockExamPage() {
                 {currentType === 2 &&
                   "주제에 대한 본인 의견을 근거와 함께 1분 안에 영어로 답변하세요."}
                 {currentType === 3 &&
-                  "위 그래프/사진을 보고 핵심 내용을 1분 안에 영어로 묘사·분석하세요."}
+                  "위 그래프/사진을 1분 안에 영어로 묘사하세요. 사진일 경우 사람과 그들의 행동을 중심으로!"}
                 {currentType === 4 &&
                   "지문을 듣고 핵심 내용을 1분 안에 본인 말로 영어 요약하세요. (질문 없음 — 요약만)"}
               </div>

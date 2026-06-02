@@ -2179,343 +2179,363 @@
     },
     {
       "id": "t3_photo_001",
-      "subtype": "photo",
       "category": "office",
-      "difficulty": "easy",
-      "image_url": "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=800&h=500&fit=crop",
-      "image_description": "사무실 회의 장면. 사람들이 테이블에 앉아 노트북과 서류를 보고 있음.",
-      "question": "Describe this picture in detail. What are the people doing, where are they, and what do you think is happening?",
+      "image_url": "https://images.unsplash.com/photo-1543269865-cbf427effbad?w=900&h=600&fit=crop",
+      "image_description": "회의실에서 비즈니스 정장을 입은 4~5명의 사람들이 큰 테이블 주위에 모여 회의하고 있다. 한 사람이 노트북 화면을 가리키며 설명하고, 다른 사람들은 메모를 하거나 경청한다.",
       "key_vocabulary": [
         "meeting",
         "colleagues",
-        "discussion",
-        "office"
+        "presentation",
+        "discuss",
+        "office",
+        "team"
       ],
-      "sample_answer": "In this picture, I can see a group of people in a meeting room. They are sitting around a table with laptops and documents. They appear to be having a business discussion. The setting looks like a modern office environment."
+      "sample_answer": "In this picture, I can see four or five people having a business meeting in a modern conference room. They are sitting around a large table, and one person is pointing at a laptop screen, possibly explaining a project or report. The others are listening attentively — some are taking notes while others are watching the screen. Everyone is dressed in professional attire, suggesting this is an important workplace discussion.",
+      "subtype": "photo",
+      "difficulty": "medium",
+      "question": "Describe this picture in detail. Focus on the people — who they are, what they are doing, and what the overall atmosphere is."
     },
     {
       "id": "t3_photo_002",
-      "subtype": "photo",
       "category": "cafe",
-      "difficulty": "easy",
-      "image_url": "https://images.unsplash.com/photo-1521017432531-fbd92d768814?w=800&h=500&fit=crop",
-      "image_description": "카페 내부. 사람들이 테이블에 앉아 커피를 마시거나 이야기하고 있음.",
-      "question": "Describe this picture in detail. What are the people doing, where are they, and what do you think is happening?",
+      "image_url": "https://images.unsplash.com/photo-1521737852567-6949f3f9f2b5?w=900&h=600&fit=crop",
+      "image_description": "분주한 카페 내부. 약 6~8명의 손님들이 여러 테이블에 앉아 커피를 마시거나 노트북으로 일하고 있다. 카운터에서는 바리스타가 음료를 만들고, 한 손님이 주문을 기다리며 휴대폰을 보고 있다.",
       "key_vocabulary": [
         "cafe",
         "customers",
+        "barista",
+        "laptop",
         "coffee",
         "chatting"
       ],
-      "sample_answer": "This picture shows the inside of a cafe. There are several customers sitting at tables, some are drinking coffee while others are chatting with friends. The atmosphere looks warm and relaxed."
+      "sample_answer": "This picture shows a busy cafe scene with around six to eight customers. Some people are sitting alone, focused on their laptops, while others are chatting with friends over coffee. At the counter, a barista is preparing drinks for a customer who is checking their phone while waiting. The atmosphere looks warm and lively, suggesting this is a popular spot for both work and socializing.",
+      "subtype": "photo",
+      "difficulty": "medium",
+      "question": "Describe this picture in detail. Focus on the people — who they are, what they are doing, and what the overall atmosphere is."
     },
     {
       "id": "t3_photo_003",
-      "subtype": "photo",
       "category": "restaurant",
-      "difficulty": "easy",
-      "image_url": "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800&h=500&fit=crop",
-      "image_description": "식당 내부에서 사람들이 식사하는 모습.",
-      "question": "Describe this picture in detail. What are the people doing, where are they, and what do you think is happening?",
+      "image_url": "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=900&h=600&fit=crop",
+      "image_description": "저녁 시간 식당 내부. 여러 테이블에서 친구나 가족들이 음식을 나누며 대화하고 있다. 한 테이블에는 4명이 와인잔을 들고 건배하고 있고, 다른 테이블에는 한 가족이 어린 자녀와 함께 식사 중이다. 직원이 트레이를 들고 테이블 사이를 지나간다.",
       "key_vocabulary": [
         "restaurant",
-        "dining",
-        "customers",
-        "meal"
+        "diners",
+        "waiter",
+        "toast",
+        "meal",
+        "atmosphere"
       ],
-      "sample_answer": "This is a restaurant scene. People are sitting at tables enjoying their meals. Some are talking with their companions while eating. The restaurant looks busy and the atmosphere is lively."
+      "sample_answer": "This picture shows a restaurant scene during dinner time. Several groups of people are enjoying their meals at different tables. At one table, four friends are raising their wine glasses to make a toast, looking happy and animated. At another table, a family with young children is having dinner together. A waiter is moving between tables carrying a tray. The overall atmosphere is lively and convivial.",
+      "subtype": "photo",
+      "difficulty": "medium",
+      "question": "Describe this picture in detail. Focus on the people — who they are, what they are doing, and what the overall atmosphere is."
     },
     {
       "id": "t3_photo_004",
-      "subtype": "photo",
       "category": "transport",
-      "difficulty": "medium",
-      "image_url": "https://images.unsplash.com/photo-1556122071-e404eaedb77f?w=800&h=500&fit=crop",
-      "image_description": "지하철 또는 기차 안에서 사람들이 앉아있거나 휴대폰을 보고 있는 모습.",
-      "question": "Describe this picture in detail. What are the people doing, where are they, and what do you think is happening?",
+      "image_url": "https://images.unsplash.com/photo-1474487548417-781cb71495f3?w=900&h=600&fit=crop",
+      "image_description": "지하철 객차 안의 출퇴근 시간 모습. 의자가 거의 다 차 있고, 일부 승객은 손잡이를 잡고 서 있다. 대부분이 휴대폰을 보거나 이어폰을 끼고 있고, 일부는 가방·서류를 들고 있어 비즈니스 통근자임을 알 수 있다.",
       "key_vocabulary": [
         "subway",
         "passengers",
         "commuters",
-        "seats"
+        "rush hour",
+        "phones",
+        "standing"
       ],
-      "sample_answer": "In this picture, I can see passengers inside a subway train. Some people are sitting on the seats while others are standing. Many of them are looking at their phones. It seems to be a typical commuting scene during rush hour."
+      "sample_answer": "In this picture, I can see passengers inside a crowded subway train during rush hour. All the seats are taken, and several people are standing while holding onto the handrails. Most of the commuters are looking at their phones or wearing earphones, completely absorbed in their own worlds. Some are carrying briefcases and bags, suggesting they are office workers on their way to work. The scene captures a typical busy morning commute in a big city.",
+      "subtype": "photo",
+      "difficulty": "medium",
+      "question": "Describe this picture in detail. Focus on the people — who they are, what they are doing, and what the overall atmosphere is."
     },
     {
       "id": "t3_photo_005",
-      "subtype": "photo",
       "category": "shopping",
-      "difficulty": "easy",
-      "image_url": "https://images.unsplash.com/photo-1604719312566-8912e9227c6a?w=800&h=500&fit=crop",
-      "image_description": "마트나 슈퍼마켓에서 사람들이 카트를 밀며 쇼핑하는 모습.",
-      "question": "Describe this picture in detail. What are the people doing, where are they, and what do you think is happening?",
+      "image_url": "https://images.unsplash.com/photo-1481437156560-3205f6a55735?w=900&h=600&fit=crop",
+      "image_description": "대형 마트 통로. 여러 쇼핑객이 카트를 밀며 진열대 사이를 다니고 있다. 한 어머니는 어린 자녀와 함께 과일을 고르고 있고, 다른 손님은 가격표를 확인 중이다. 한 직원은 매대를 정리하고 있다.",
       "key_vocabulary": [
         "supermarket",
-        "shopping",
+        "shoppers",
         "cart",
-        "shelves"
+        "aisle",
+        "products",
+        "selecting"
       ],
-      "sample_answer": "This picture shows people shopping at a supermarket. They are pushing carts down the aisles and selecting items from the shelves. Some customers appear to be checking prices while others are talking with family members."
+      "sample_answer": "This picture shows people shopping at a large supermarket. Several customers are pushing carts down the aisles, looking at the products on the shelves. A mother is helping her young child pick out fresh fruit, while another shopper is carefully checking a price tag. An employee is busy restocking items on the shelves. The bright lighting and wide aisles suggest this is a modern, well-organized store.",
+      "subtype": "photo",
+      "difficulty": "medium",
+      "question": "Describe this picture in detail. Focus on the people — who they are, what they are doing, and what the overall atmosphere is."
     },
     {
       "id": "t3_photo_006",
-      "subtype": "photo",
       "category": "park",
-      "difficulty": "easy",
-      "image_url": "https://images.unsplash.com/photo-1551632811-561732d1e306?w=800&h=500&fit=crop",
-      "image_description": "공원에서 사람들이 산책하거나 휴식하는 모습.",
-      "question": "Describe this picture in detail. What are the people doing, where are they, and what do you think is happening?",
+      "image_url": "https://images.unsplash.com/photo-1473445730015-841f29a9490b?w=900&h=600&fit=crop",
+      "image_description": "맑은 날의 도시 공원. 가족과 친구들이 잔디밭에서 피크닉을 하거나 산책하고 있다. 한 부부는 강아지와 산책 중이고, 두 어린이가 공놀이를 하고 있다. 벤치에는 노부부가 앉아 책을 읽고 있다.",
       "key_vocabulary": [
         "park",
+        "picnic",
         "walking",
-        "outdoor",
+        "children",
+        "playing",
         "relaxing"
       ],
-      "sample_answer": "This picture captures a scene in a park. People are enjoying the outdoor activities, some are walking along the path while others are sitting on benches. The weather looks pleasant and the surroundings are green and peaceful."
+      "sample_answer": "This picture captures a peaceful day at a city park. Many people are enjoying the pleasant weather. One couple is walking their dog along the path, while two young children are playing with a ball on the grass. An elderly couple is sitting on a bench reading books together. A few families have set up picnic blankets and are sharing food. The atmosphere is relaxed and family-friendly.",
+      "subtype": "photo",
+      "difficulty": "medium",
+      "question": "Describe this picture in detail. Focus on the people — who they are, what they are doing, and what the overall atmosphere is."
     },
     {
       "id": "t3_photo_007",
-      "subtype": "photo",
       "category": "office",
-      "difficulty": "medium",
-      "image_url": "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=800&h=500&fit=crop",
-      "image_description": "팀원들이 모여 자료를 함께 보며 일하는 모습.",
-      "question": "Describe this picture in detail. What are the people doing, where are they, and what do you think is happening?",
+      "image_url": "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=900&h=600&fit=crop",
+      "image_description": "오픈 오피스에서 3명의 동료가 한 모니터를 함께 보며 협업하고 있다. 한 사람은 마우스로 화면을 가리키고, 다른 한 사람은 노트에 적고 있다. 배경에는 다른 직원들도 각자 자리에서 일하는 모습이 보인다.",
       "key_vocabulary": [
-        "team",
+        "coworkers",
         "collaboration",
-        "working",
-        "meeting"
+        "monitor",
+        "discussing",
+        "open office",
+        "teamwork"
       ],
-      "sample_answer": "In this picture, I can see a team of professionals working together. They appear to be reviewing some materials and having a discussion. The setting looks like a modern office where colleagues are collaborating on a project."
+      "sample_answer": "In this picture, three coworkers are collaborating closely in front of a computer monitor at a modern open office. One person is pointing at the screen with a mouse, explaining something, while another is taking notes. They appear engaged and focused on solving a problem together. In the background, other employees can be seen working at their own desks. The scene illustrates a collaborative workplace culture.",
+      "subtype": "photo",
+      "difficulty": "medium",
+      "question": "Describe this picture in detail. Focus on the people — who they are, what they are doing, and what the overall atmosphere is."
     },
     {
       "id": "t3_photo_008",
-      "subtype": "photo",
       "category": "market",
-      "difficulty": "medium",
-      "image_url": "https://images.unsplash.com/photo-1488459716781-31db52582fe9?w=800&h=500&fit=crop",
-      "image_description": "야외 시장 또는 푸드 마켓. 여러 상인과 손님이 좌판 사이를 오가며 음식·상품을 사고팔고 있음. 다양한 색상의 진열과 사람들의 활기찬 움직임이 보임.",
-      "question": "Describe this picture in detail. Who are the people, where are they, and what is the overall atmosphere?",
+      "image_url": "https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?w=900&h=600&fit=crop",
+      "image_description": "야외 농산물 시장. 여러 상인과 손님으로 붐비고 있다. 한 노점 앞에는 두 여성이 야채를 고르며 상인과 흥정 중이고, 다른 노점에서는 아버지가 아이에게 과일을 사주고 있다. 가게마다 다채로운 농산물이 진열되어 있다.",
       "key_vocabulary": [
-        "outdoor market",
+        "market",
         "vendors",
         "customers",
-        "produce",
-        "stalls",
-        "lively"
+        "fresh produce",
+        "bargaining",
+        "colorful"
       ],
-      "sample_answer": "This picture shows a busy outdoor market filled with vendors and customers. Stalls display fresh produce, food, and various goods. People are walking between the stalls, examining items and chatting with vendors. The atmosphere is lively and colorful, with a strong sense of community typical of traditional markets."
+      "sample_answer": "This picture shows a lively outdoor farmers' market filled with vendors and customers. Two women are at a vegetable stall, carefully selecting produce and chatting with the vendor about prices. At another stall, a father is buying fruit for his young child. Each stall displays colorful, fresh produce. The market has a strong community feel, with people stopping to talk to each other as they shop.",
+      "subtype": "photo",
+      "difficulty": "medium",
+      "question": "Describe this picture in detail. Focus on the people — who they are, what they are doing, and what the overall atmosphere is."
     },
     {
       "id": "t3_photo_009",
-      "subtype": "photo",
       "category": "classroom",
-      "difficulty": "easy",
-      "image_url": "https://images.unsplash.com/photo-1577896851231-70ef18881754?w=800&h=500&fit=crop",
-      "image_description": "강의실에서 학생들이 수업을 듣거나 토론하는 모습.",
-      "question": "Describe this picture in detail. What are the people doing, where are they, and what do you think is happening?",
+      "image_url": "https://images.unsplash.com/photo-1577896851231-70ef18881754?w=900&h=600&fit=crop",
+      "image_description": "대학 강의실. 약 20명의 학생들이 책상에 앉아 강의를 듣고 있다. 일부는 노트북으로, 일부는 종이 노트에 필기 중이다. 앞쪽 강단에서는 강사가 화면을 가리키며 설명하고 있다. 한 학생이 손을 들어 질문하려 한다.",
       "key_vocabulary": [
         "classroom",
         "students",
         "lecture",
-        "learning"
+        "professor",
+        "taking notes",
+        "question"
       ],
-      "sample_answer": "This picture shows a classroom scene. Students are sitting at desks and appear to be listening to a lecture. Some are taking notes while others are looking at the front of the room. The atmosphere suggests an active learning environment."
+      "sample_answer": "This picture shows a university classroom during a lecture. About twenty students are sitting at desks, listening attentively. Some are typing notes on their laptops while others prefer to write in paper notebooks. At the front, the professor is pointing at the screen, explaining a concept. One student in the middle row has raised her hand, ready to ask a question. The atmosphere suggests an engaged and active learning environment.",
+      "subtype": "photo",
+      "difficulty": "medium",
+      "question": "Describe this picture in detail. Focus on the people — who they are, what they are doing, and what the overall atmosphere is."
     },
     {
       "id": "t3_photo_010",
-      "subtype": "photo",
       "category": "home",
-      "difficulty": "easy",
-      "image_url": "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=800&h=500&fit=crop",
-      "image_description": "거실에서 가족이 함께 시간을 보내는 모습.",
-      "question": "Describe this picture in detail. What are the people doing, where are they, and what do you think is happening?",
+      "image_url": "https://images.unsplash.com/photo-1609220136736-443140cffec6?w=900&h=600&fit=crop",
+      "image_description": "거실에 모인 가족 4명. 부모와 두 자녀가 소파에 함께 앉아 보드게임을 즐기고 있다. 아버지는 카드를 들고 웃고 있고, 어머니는 자녀에게 게임 규칙을 설명한다. 어린 아들은 점수판을 가리키며 흥분한 표정이다.",
       "key_vocabulary": [
         "family",
         "living room",
-        "together",
-        "home"
+        "board game",
+        "bonding",
+        "laughing",
+        "weekend"
       ],
-      "sample_answer": "This picture shows a family spending time together in their living room. They look comfortable and relaxed. Some are sitting on the sofa while others are nearby. The room is warm and well-decorated, creating a cozy home atmosphere."
+      "sample_answer": "This picture shows a family of four spending quality time together in their living room. The parents and two children are sitting on the sofa playing a board game. The father is holding cards in his hand with a big smile, while the mother is explaining the rules to one of the children. The young son is excitedly pointing at the score sheet. The scene captures a warm, joyful family bonding moment, probably on a weekend evening.",
+      "subtype": "photo",
+      "difficulty": "medium",
+      "question": "Describe this picture in detail. Focus on the people — who they are, what they are doing, and what the overall atmosphere is."
     },
     {
       "id": "t3_photo_011",
-      "subtype": "photo",
       "category": "gym",
-      "difficulty": "medium",
-      "image_url": "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&h=500&fit=crop",
-      "image_description": "헬스장에서 사람들이 운동기구로 운동하는 모습.",
-      "question": "Describe this picture in detail. What are the people doing, where are they, and what do you think is happening?",
+      "image_url": "https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=900&h=600&fit=crop",
+      "image_description": "헬스장에서 여러 사람들이 운동 중이다. 한 남성은 덤벨로 어깨 운동을 하고, 다른 여성은 트레드밀에서 달리고 있다. 트레이너는 한 회원의 자세를 교정해 주고 있다. 모두 운동복 차림.",
       "key_vocabulary": [
         "gym",
-        "exercise",
         "workout",
+        "trainer",
+        "treadmill",
+        "weights",
         "fitness"
       ],
-      "sample_answer": "In this picture, I can see people exercising at a fitness center. Some are using weight machines while others are doing cardio exercises. They all appear focused on their workouts. The gym looks modern and well-equipped."
+      "sample_answer": "In this picture, I can see several people working out at a busy gym. One man is doing shoulder exercises with dumbbells, focused on his form. A woman is running on the treadmill, looking energetic. On the other side, a personal trainer is correcting a member's posture during squats. Everyone is wearing athletic clothing and looks focused on their workouts. The gym has modern equipment and a motivating atmosphere.",
+      "subtype": "photo",
+      "difficulty": "medium",
+      "question": "Describe this picture in detail. Focus on the people — who they are, what they are doing, and what the overall atmosphere is."
     },
     {
       "id": "t3_photo_012",
-      "subtype": "photo",
       "category": "library",
-      "difficulty": "medium",
-      "image_url": "https://images.unsplash.com/photo-1568667256549-094345857637?w=800&h=500&fit=crop",
-      "image_description": "도서관 열람실. 여러 학생이 긴 테이블에 앉아 책을 읽거나 노트북으로 공부하고 있고, 양쪽 벽에는 천장까지 닿는 책장이 가득 차 있음.",
-      "question": "Describe this picture in detail. What are the people doing, where are they, and what do you think is happening?",
+      "image_url": "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=900&h=600&fit=crop",
+      "image_description": "도서관 열람실. 여러 학생들이 긴 테이블에 앉아 책을 읽거나 노트북으로 공부하고 있다. 한 학생은 두꺼운 책을 펴놓고 메모를 하고 있고, 다른 학생은 헤드폰을 끼고 영상 강의를 듣는다. 사서가 책을 정리하며 지나간다.",
       "key_vocabulary": [
         "library",
+        "students",
         "studying",
-        "reading",
         "books",
-        "bookshelves",
-        "focused"
+        "concentration",
+        "quiet"
       ],
-      "sample_answer": "This picture shows a library scene. Several students are sitting at long wooden tables, some reading books and others working on laptops. Tall bookshelves filled with thousands of books line the walls. The atmosphere looks quiet and focused, typical of a serious study environment."
+      "sample_answer": "This picture shows a quiet library reading room with many students hard at work. Some are reading thick textbooks and taking detailed notes, while others are studying on their laptops. One student is wearing headphones, possibly watching an online lecture. A librarian is walking past, returning books to the tall shelves. The atmosphere is serious and focused, perfect for deep concentration before exams.",
+      "subtype": "photo",
+      "difficulty": "medium",
+      "question": "Describe this picture in detail. Focus on the people — who they are, what they are doing, and what the overall atmosphere is."
     },
     {
       "id": "t3_photo_013",
-      "subtype": "photo",
       "category": "airport",
-      "difficulty": "medium",
-      "image_url": "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=800&h=500&fit=crop",
-      "image_description": "공항 터미널의 출국 대기 구역. 여러 여행객이 캐리어를 끌고 이동하거나 의자에 앉아 비행기를 기다리고 있음. 대형 출발 안내 전광판이 보임.",
-      "question": "Describe this picture in detail. Where is this place and what are the people doing?",
+      "image_url": "https://images.unsplash.com/photo-1530521954074-e64f6810b32d?w=900&h=600&fit=crop",
+      "image_description": "공항 출국 게이트 앞 대기 구역. 여러 여행객이 캐리어를 옆에 두고 의자에 앉아 휴대폰을 보거나 책을 읽고 있다. 한 가족은 어린 아이와 함께 게임을 하고, 양복 차림 사업가는 통화 중이다.",
       "key_vocabulary": [
         "airport",
-        "terminal",
-        "passengers",
+        "travelers",
         "luggage",
-        "boarding",
+        "boarding gate",
+        "waiting",
         "departure"
       ],
-      "sample_answer": "This picture is taken at an airport terminal. Many passengers are walking through the area with their suitcases, while others are seated waiting for their flights. A large departure board displays flight information. The atmosphere appears busy but organized, capturing the typical scene of international travel."
+      "sample_answer": "This picture is taken at an airport boarding area. Many travelers are sitting in the rows of chairs with their luggage beside them. Some are checking their phones or reading books to pass the time. One family is keeping their young child entertained with a game. A businessman in a suit is on his phone, likely making a last call before boarding. The departure board on the wall shows multiple international flights, creating a busy travel atmosphere.",
+      "subtype": "photo",
+      "difficulty": "medium",
+      "question": "Describe this picture in detail. Focus on the people — who they are, what they are doing, and what the overall atmosphere is."
     },
     {
       "id": "t3_photo_014",
-      "subtype": "photo",
       "category": "construction",
-      "difficulty": "medium",
-      "image_url": "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=800&h=500&fit=crop",
-      "image_description": "건설 현장. 안전모와 작업복을 입은 여러 건설 작업자가 도면을 보거나 자재를 운반하고 있고, 배경에 크레인과 미완성 건물의 철골 구조가 보임.",
-      "question": "Describe this picture in detail. What are the workers doing and what kind of project does this appear to be?",
+      "image_url": "https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=900&h=600&fit=crop",
+      "image_description": "건설 현장. 안전모를 쓴 5~6명의 건설 작업자들이 일하고 있다. 두 명은 도면을 함께 보며 의논하고, 다른 작업자들은 자재를 운반하거나 측정을 한다. 배경에는 크레인과 건축 중인 건물이 보인다.",
       "key_vocabulary": [
         "construction site",
         "workers",
         "helmets",
-        "crane",
+        "blueprints",
         "building",
-        "blueprints"
+        "crane"
       ],
-      "sample_answer": "This picture shows a construction site with several workers wearing safety helmets and reflective vests. Some are examining blueprints while others are moving materials. A large crane and the steel framework of an unfinished building are visible in the background. The scene suggests a major commercial construction project in progress."
+      "sample_answer": "This picture shows a construction site with five or six workers actively engaged in their jobs. All of them are wearing safety helmets and bright reflective vests. Two workers are looking at blueprints together, pointing at details and discussing the plan. Other workers are carrying materials and measuring sections of the structure. In the background, a large crane is lifting steel beams, and the framework of a new building is taking shape. The scene captures a busy and well-organized work environment.",
+      "subtype": "photo",
+      "difficulty": "medium",
+      "question": "Describe this picture in detail. Focus on the people — who they are, what they are doing, and what the overall atmosphere is."
     },
     {
       "id": "t3_photo_015",
-      "subtype": "photo",
       "category": "event",
-      "difficulty": "medium",
-      "image_url": "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?w=800&h=500&fit=crop",
-      "image_description": "콘서트 또는 페스티벌 현장. 수많은 관객이 무대 앞에 모여 손을 들거나 휴대폰을 켜고 환호하고 있음. 무대 조명과 연기 효과가 분위기를 띄움.",
-      "question": "Describe this picture in detail. What kind of event is this and how do the people seem to feel?",
+      "image_url": "https://images.unsplash.com/photo-1493863641943-9b68992a8d07?w=900&h=600&fit=crop",
+      "image_description": "콘서트 현장. 수많은 관객이 무대 앞에 모여 손을 들고 환호하고 있다. 많은 사람들이 휴대폰으로 공연을 촬영 중이고, 일부는 어깨에 친구를 태우고 있다. 무대에서는 강한 조명과 연기 효과가 분위기를 띄운다.",
       "key_vocabulary": [
         "concert",
         "crowd",
         "audience",
+        "cheering",
         "stage",
-        "lights",
-        "cheering"
+        "lights"
       ],
-      "sample_answer": "This picture captures a large concert or music festival. A huge crowd of people fills the venue in front of the stage, with many raising their hands or holding up phones to record the performance. Colorful stage lights and smoke effects create an exciting atmosphere. The audience clearly looks energetic and emotionally engaged."
+      "sample_answer": "This picture captures the energy of a live concert. A huge crowd of people is gathered in front of the stage, with many raising their hands and cheering enthusiastically. A lot of audience members are holding up their phones to record the performance, and some friends are sitting on each other's shoulders for a better view. The stage is lit with bright colorful lights and smoke effects. The atmosphere is electric and emotional, suggesting a beloved artist is performing.",
+      "subtype": "photo",
+      "difficulty": "medium",
+      "question": "Describe this picture in detail. Focus on the people — who they are, what they are doing, and what the overall atmosphere is."
     },
     {
       "id": "t3_photo_016",
-      "subtype": "photo",
       "category": "transport",
-      "difficulty": "medium",
-      "image_url": "https://images.unsplash.com/photo-1517022812141-23620dba5c23?w=800&h=500&fit=crop",
-      "image_description": "기차역 또는 지하철 플랫폼의 출퇴근 시간. 수십 명의 통근자들이 빠른 걸음으로 이동하고 있고, 일부는 휴대폰을 보거나 가방을 메고 있음. 모션 블러로 인해 움직임이 강조됨.",
-      "question": "Describe this picture. Where is this place, what time of day might it be, and what are the people doing?",
+      "image_url": "https://images.unsplash.com/photo-1473445730015-841f29a9490b?w=900&h=600&fit=crop",
+      "image_description": "기차역 플랫폼의 출퇴근 시간. 수십 명의 통근자들이 빠른 걸음으로 이동하고 있다. 일부는 휴대폰을 보고, 일부는 커피를 들고, 일부는 가방을 메고 있다. 한 가족은 큰 캐리어를 끌고 서로 어디로 갈지 의논 중이다.",
       "key_vocabulary": [
-        "train station",
+        "station",
         "platform",
         "commuters",
         "rush hour",
         "crowd",
         "hurrying"
       ],
-      "sample_answer": "This picture shows a train station platform during rush hour. Dozens of commuters are moving quickly in different directions, some checking their phones while others carry briefcases or bags. The motion blur emphasizes how fast everyone is moving. The image clearly captures the energy and stress of morning or evening rush hour in a major city."
+      "sample_answer": "This picture shows a train station platform during the morning rush hour. Dozens of commuters are walking quickly in different directions. Some are checking their phones for the time, others are holding coffee cups, and many are carrying briefcases. In the middle, a family with large suitcases is standing and discussing where to go next, perhaps tourists who are confused by the busy station. The motion blur in the image emphasizes how fast everyone is moving.",
+      "subtype": "photo",
+      "difficulty": "medium",
+      "question": "Describe this picture in detail. Focus on the people — who they are, what they are doing, and what the overall atmosphere is."
     },
     {
       "id": "t3_photo_017",
-      "subtype": "photo",
       "category": "office",
-      "difficulty": "medium",
-      "image_url": "https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&h=500&fit=crop",
-      "image_description": "넓은 오픈 오피스. 여러 직원들이 책상에서 모니터를 보며 일하거나 동료와 대화하고 있음. 자연광이 들어오는 모던한 인테리어.",
-      "question": "Describe this picture. What does the workplace look like and what are the employees doing?",
+      "image_url": "https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=900&h=600&fit=crop",
+      "image_description": "현대적인 오픈 오피스. 10여 명의 직원들이 책상에서 일하고 있다. 일부는 모니터를 보며 타이핑 중이고, 두 동료는 일어서서 화이트보드 앞에서 토론하고 있다. 한 직원은 헤드셋을 끼고 화상회의 중인 듯하다.",
       "key_vocabulary": [
         "open office",
         "employees",
         "monitors",
-        "collaboration",
-        "modern",
-        "workspace"
+        "whiteboard",
+        "video call",
+        "modern"
       ],
-      "sample_answer": "This picture shows a modern open-plan office filled with employees. Some are sitting at their desks focused on their computer monitors, while others are gathered in small groups having discussions. The space has clean, modern design with natural light coming through large windows. The atmosphere appears productive but relaxed, typical of a contemporary tech company."
+      "sample_answer": "This picture shows a modern open-plan office filled with employees. About ten people are working at their desks, with most focused on their monitors and typing. Two coworkers are standing in front of a whiteboard, having an animated discussion — one of them is drawing a diagram. Another employee is wearing a headset and looks engaged in a video call. The office has clean modern design with plenty of natural light, suggesting a productive and collaborative tech-company atmosphere.",
+      "subtype": "photo",
+      "difficulty": "medium",
+      "question": "Describe this picture in detail. Focus on the people — who they are, what they are doing, and what the overall atmosphere is."
     },
     {
       "id": "t3_photo_018",
-      "subtype": "photo",
       "category": "restaurant",
-      "difficulty": "medium",
-      "image_url": "https://images.unsplash.com/photo-1559329007-40df8a9345d8?w=800&h=500&fit=crop",
-      "image_description": "분주한 카페 내부. 거의 모든 테이블이 손님으로 차 있고, 카운터에서는 바리스타가 음료를 만들고 있음. 사람들이 노트북으로 작업하거나 친구와 대화 중.",
-      "question": "Describe this picture in detail. What is happening in this place?",
+      "image_url": "https://images.unsplash.com/photo-1559329007-40df8a9345d8?w=900&h=600&fit=crop",
+      "image_description": "분주한 카페테리아 내부. 거의 모든 테이블이 손님으로 차 있다. 한 그룹은 노트북으로 함께 일하고 있고, 두 친구는 마주 앉아 활기차게 대화 중이다. 카운터에서는 바리스타가 음료를 만들고 손님들이 줄을 서 있다.",
       "key_vocabulary": [
         "cafe",
-        "barista",
         "customers",
-        "laptop",
-        "busy",
-        "chatting"
+        "barista",
+        "queue",
+        "chatting",
+        "busy"
       ],
-      "sample_answer": "This picture shows a busy cafe with most tables occupied by customers. At the counter, a barista is preparing drinks while two more customers wait for their orders. Some people are working on laptops, others are chatting with friends, and a couple is reading. The cafe has a warm and inviting atmosphere, suggesting it is a popular neighborhood spot."
+      "sample_answer": "This picture shows a busy cafe with most tables occupied. One group is gathered around a laptop, possibly working on a project together. Two friends are facing each other and chatting energetically over their drinks. At the counter, a barista is preparing drinks while three customers wait in line to order. The cafe has a warm and inviting atmosphere with wooden furniture, and it clearly serves as a popular neighborhood gathering spot.",
+      "subtype": "photo",
+      "difficulty": "medium",
+      "question": "Describe this picture in detail. Focus on the people — who they are, what they are doing, and what the overall atmosphere is."
     },
     {
       "id": "t3_photo_019",
-      "subtype": "photo",
       "category": "shopping",
-      "difficulty": "medium",
-      "image_url": "https://images.unsplash.com/photo-1481437156560-3205f6a55735?w=800&h=500&fit=crop",
-      "image_description": "대형 쇼핑몰 내부. 다층 구조의 통로를 따라 많은 쇼핑객이 가게 사이를 이동하고 있고, 에스컬레이터와 화려한 매장 간판이 보임.",
-      "question": "Describe this picture in detail. Where is this place, who are the people, and what is the atmosphere?",
+      "image_url": "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=900&h=600&fit=crop",
+      "image_description": "쇼핑몰 내부. 여러 쇼핑객이 다층 통로를 따라 움직이며 매장 사이를 구경하고 있다. 어머니와 십대 딸이 함께 옷가게에서 옷을 보고, 한 그룹의 친구들은 쇼핑백을 들고 웃으며 에스컬레이터를 타고 올라간다.",
       "key_vocabulary": [
-        "shopping mall",
+        "mall",
         "shoppers",
-        "stores",
+        "storefronts",
         "escalator",
-        "multi-level",
-        "crowded"
+        "shopping bags",
+        "friends"
       ],
-      "sample_answer": "This picture shows the interior of a large multi-level shopping mall. Shoppers are walking along the wide walkways between brightly lit storefronts. Some are carrying shopping bags while others are riding the escalator between floors. The mall is clearly busy, suggesting it is a weekend or holiday shopping day. The overall atmosphere is energetic and commercial."
+      "sample_answer": "This picture shows the inside of a large multi-level shopping mall full of shoppers. A mother and her teenage daughter are looking at clothes together at a fashion store, with the daughter holding up a shirt. Nearby, a group of friends carrying multiple shopping bags is laughing as they ride the escalator up to the next floor. The brightly lit stores and wide walkways make the mall feel exciting and busy, likely a weekend shopping day.",
+      "subtype": "photo",
+      "difficulty": "medium",
+      "question": "Describe this picture in detail. Focus on the people — who they are, what they are doing, and what the overall atmosphere is."
     },
     {
       "id": "t3_photo_020",
-      "subtype": "photo",
       "category": "sports",
-      "difficulty": "medium",
-      "image_url": "https://images.unsplash.com/photo-1459865264687-595d652de67e?w=800&h=500&fit=crop",
-      "image_description": "축구 또는 야구 경기장의 관중석. 수천 명의 관중이 좌석을 가득 메우고 응원을 하고 있으며, 일부는 단체 응원복을 입거나 깃발을 흔들고 있음.",
-      "question": "Describe this picture. What kind of event is taking place and how does the crowd seem?",
+      "image_url": "https://images.unsplash.com/photo-1459865264687-595d652de67e?w=900&h=600&fit=crop",
+      "image_description": "축구 경기장 관중석. 수많은 관중이 좌석을 가득 메우고 응원을 하고 있다. 앞줄 팬들은 단체로 같은 색 유니폼을 입고 있고, 한 그룹은 큰 깃발을 흔들고 있다. 일부는 핸드폰으로 사진을 찍고 있다.",
       "key_vocabulary": [
         "stadium",
-        "crowd",
         "fans",
-        "cheering",
         "spectators",
+        "cheering",
+        "jerseys",
         "match"
       ],
-      "sample_answer": "This picture shows a packed sports stadium during a match. Thousands of fans fill the seats, with many cheering, waving flags, or wearing team jerseys. Some sections appear to be organized supporter groups in matching colors. The atmosphere is clearly intense and exciting, suggesting an important game between popular teams."
+      "sample_answer": "This picture shows a packed sports stadium during an important match. Thousands of fans fill every seat in the stands, creating a sea of color. In the front rows, supporters are dressed in matching team jerseys, and one group is waving a huge flag enthusiastically. Several fans are holding up their phones to take photos of the action on the field. The atmosphere looks intense and exciting — clearly an important game between popular rival teams.",
+      "subtype": "photo",
+      "difficulty": "medium",
+      "question": "Describe this picture in detail. Focus on the people — who they are, what they are doing, and what the overall atmosphere is."
     }
   ],
   "statistics": {

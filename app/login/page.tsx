@@ -9,10 +9,22 @@ import { hashPassword, getStoredPwHash, setStoredPwHash } from "@/lib/passwordSt
 import { pullUserFromServer } from "@/lib/userSync";
 import Button from "@/components/ui/Button";
 
-// 코드 노출 시 평문 추출 방지를 위해 SHA-256 해시로 저장
-// 비교 시 입력값을 동일 알고리즘으로 해시 후 일치 검증
-const A_ID_H = "ab8513704d7bfe91003950d8c7fc5b6426488ce945547d9e3be8e1128627c2ea";
-const A_PW_H = "778d23214edb22677a254c956305d3d52830e37a53350d0f3ff437a87c20eaa5";
+// 코드 노출 시 평문 추출 방지를 위해 SHA-256 해시로 저장.
+// 비교 시 입력값을 동일 알고리즘으로 해시 후 (id, pw) 페어가 화이트리스트에 있는지 검증.
+const ADMINS: Array<{ idH: string; pwH: string; name: string }> = [
+  // 기본 관리자
+  {
+    idH: "ab8513704d7bfe91003950d8c7fc5b6426488ce945547d9e3be8e1128627c2ea",
+    pwH: "778d23214edb22677a254c956305d3d52830e37a53350d0f3ff437a87c20eaa5",
+    name: "관리자",
+  },
+  // ICT 관리자 (teczenict / ictteczen)
+  {
+    idH: "258cae22d87d673bb66f5d8ca92778a8790e6230a06b4621ed310af5d5e81c04",
+    pwH: "b3861fdf986918cc31e7cd80cb7fe291ed54b369a4f0a6bb5ef89356aeadf72a",
+    name: "ICT 관리자",
+  },
+];
 
 async function sha256Hex(s: string): Promise<string> {
   const enc = new TextEncoder().encode(s);
@@ -133,14 +145,15 @@ export default function LoginPage() {
       sha256Hex(employeeId.trim()),
       sha256Hex(adminPw),
     ]);
-    if (idH !== A_ID_H || pwH !== A_PW_H) {
+    const matched = ADMINS.find((a) => a.idH === idH && a.pwH === pwH);
+    if (!matched) {
       setError("관리자 인증 실패. ID 또는 비밀번호를 확인하세요.");
       return;
     }
 
     setLoading(true);
     storage.saveSession({
-      name: "관리자",
+      name: matched.name,
       employeeId: employeeId.trim(),
       rrnFront: "",
       team: "관리팀",

@@ -134,8 +134,11 @@ function StudySessionForType({ type, item }: { type: QuestionType; item: any }) 
         visualContent={
           item.subtype === "photo" ? (
             <div>
-              <div className="mb-3">
+              <div className="mb-3 flex items-center justify-between">
                 <span className="text-xs font-semibold text-teczen-red">PHOTO</span>
+                <span className="text-[11px] font-bold text-teczen-blue">
+                  👥 사람과 그들의 행동을 중심으로 묘사하세요
+                </span>
               </div>
               {item.image_url ? (
                 <img
@@ -160,9 +163,17 @@ function StudySessionForType({ type, item }: { type: QuestionType; item: any }) 
                     {item.image_description}
                   </div>
                   <div className="text-xs text-teczen-gray-400 mt-2">
-                    (이미지 로드 실패 — 설명 기반으로 답변 연습)
+                    (이미지 로드 실패 — 아래 설명으로 답변 연습)
                   </div>
                 </div>
+              </div>
+              <div className="mt-3 p-3 bg-teczen-blue/5 border border-teczen-blue/20 rounded-xl">
+                <div className="text-[10px] font-black tracking-wider text-teczen-blue mb-1">
+                  📝 SCENE DESCRIPTION
+                </div>
+                <p className="text-sm text-teczen-ink leading-relaxed">
+                  {item.image_description}
+                </p>
               </div>
             </div>
           ) : (
