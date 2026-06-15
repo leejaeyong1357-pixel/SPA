@@ -8,7 +8,7 @@ import { getDaysUntil, scoreToLevel } from "@/lib/scoring";
 import { decayedFlame, FLAME_COLORS, MAX_FLAME_LEVEL } from "@/lib/flame";
 import { getFlameTop5 } from "@/lib/flameTop5";
 import { pushFlame, fetchRanking, type RankingEntry } from "@/lib/flameSync";
-import { pushUserToServer } from "@/lib/userSync";
+import { pushUserToServer, pullUserFromServer } from "@/lib/userSync";
 import type { UserSettings, StudyRecord, MockExamResult, UserSession } from "@/types";
 import Header from "@/components/layout/Header";
 import Flame from "@/components/Flame";
@@ -48,12 +48,24 @@ export default function DashboardPage() {
       router.push("/setup");
       return;
     }
-    setSession(storage.getSession());
+    const sess = storage.getSession();
+    setSession(sess);
     setSettings(storage.getSettings());
     setRecords(storage.getRecords());
     setMockResults(storage.getMockResults());
-    // 내 불꽃을 공용 저장소에 올려서 다른 사람 랭킹에도 반영되게
-    pushFlame();
+
+    // 다른 기기(모바일↔PC)에서 갱신된 설정·불꽃을 서버(KV)에서 받아와서 로컬에 반영.
+    // pull 만 함 — push 는 학습 완료 시점에만 (학습량 통계가 0 으로 덮어쓰지 않게)
+    if (sess && !sess.isAdmin) {
+      pullUserFromServer(sess.employeeId).then((remote) => {
+        if (remote) {
+          // 서버에서 받은 최신 설정으로 UI 새로고침 (불꽃·시험일 등)
+          setSettings(storage.getSettings());
+        }
+        // 내 불꽃을 랭킹에 반영
+        pushFlame();
+      });
+    }
   }, [router]);
 
   if (!session || !settings) return null;
