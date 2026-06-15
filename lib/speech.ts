@@ -81,14 +81,12 @@ export function useTTS() {
 /**
  * Web Speech API 음성 인식 훅.
  *
- * ⚠️ 주의: 자동 재시작 안 함.
- *   - 일부 모바일 브라우저(Android Chrome 등)는 stop() 후 start() 해도 e.results 가 초기화되지
- *     않고 이전 세션 결과가 그대로 남는 버그가 있음. 자동 재시작 + 결과 누적 시 같은 단어가
- *     반복 누적되는 'hello hello hello...' 현상 발생.
- *   - 대신 매 세션을 독립적으로 처리하고, 상위 컴포넌트(StudySession)가 base 답변 위에
- *     새 세션 결과를 이어붙이는 방식으로 처리.
- *
- * transcript 는 매 onresult 마다 e.results 전체 스냅샷으로 재계산 → 중복 없음.
+ * 모바일 브라우저 결과 누적 버그 우회 + 자동 재시작 지원.
+ * - prefix 가 겹치는 final 결과는 더 긴 것만 남기는 dedup (모바일 핵심 버그 우회)
+ * - 세션 간 누적: lastSeenRef 에 longest snapshot 유지.
+ *   다음 세션 snapshot 이 prefix 면 그대로, 다르면 append (browser 가 e.results 를
+ *   초기화하는 경우와 유지하는 경우 모두 대응).
+ * - onend 시 사용자가 stop 한 게 아니면 자동 재시작 → 침묵 후에도 실시간 인식 계속.
  */
 export function useSTT() {
   const [listening, setListening] = useState(false);
@@ -96,6 +94,9 @@ export function useSTT() {
   const [interimTranscript, setInterimTranscript] = useState("");
   const [error, setError] = useState<string>("");
   const recognitionRef = useRef<any>(null);
+  const restartingRef = useRef(false);
+  // 지금까지 본 가장 긴 confirmed 텍스트 (세션 간 누적용)
+  const lastSeenRef = useRef("");
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -111,12 +112,7 @@ export function useSTT() {
     r.maxAlternatives = 1;
 
     r.onresult = (e: any) => {
-      // ⚠️ Android Chrome / 일부 모바일 브라우저 버그 우회:
-      // 단어가 늘어날 때마다 새 final 결과를 추가함 → e.results 안에
-      //   [final "hello", final "hello this", final "hello this is", ...]
-      // 형태로 동일 prefix 가 반복됨. 그대로 concat 하면
-      //   "hello hello this hello this is ..." 처럼 누적됨.
-      // → prefix 가 겹치는 result 는 더 긴 것만 남기고 중복 제거.
+      // 1) 현재 snapshot 을 prefix-aware dedup 으로 정리
       const finalParts: string[] = [];
       let interimText = "";
       for (let i = 0; i < e.results.length; i++) {
@@ -128,20 +124,42 @@ export function useSTT() {
             const last = finalParts[finalParts.length - 1];
             const lastL = last.toLowerCase();
             const curL = t.toLowerCase();
-            if (lastL === curL) continue; // 완전 중복 → 건너뜀
+            if (lastL === curL) continue;
             if (curL.startsWith(lastL)) {
-              finalParts[finalParts.length - 1] = t; // 새 결과가 이전 결과를 확장 → 교체
+              finalParts[finalParts.length - 1] = t;
               continue;
             }
-            if (lastL.startsWith(curL)) continue; // 새 결과가 이전 결과의 prefix → 건너뜀
+            if (lastL.startsWith(curL)) continue;
           }
           finalParts.push(t);
         } else {
           interimText += res[0].transcript;
         }
       }
-      const finalText = finalParts.join(" ");
-      setTranscript(finalText);
+      const snapshot = finalParts.join(" ");
+
+      // 2) 세션 누적: snapshot vs lastSeen 비교
+      let newTotal: string;
+      if (!snapshot) {
+        newTotal = lastSeenRef.current;
+      } else if (!lastSeenRef.current) {
+        newTotal = snapshot;
+      } else {
+        const seenL = lastSeenRef.current.toLowerCase();
+        const snapL = snapshot.toLowerCase();
+        if (snapL.startsWith(seenL)) {
+          // snapshot 이 이전 누적의 확장 → 사용 (browser 가 e.results 유지)
+          newTotal = snapshot;
+        } else if (seenL.startsWith(snapL)) {
+          // snapshot 이 더 짧은 prefix → 누적 유지
+          newTotal = lastSeenRef.current;
+        } else {
+          // 다른 내용 → 새 utterance 로 보고 append (browser 가 reset 한 경우)
+          newTotal = lastSeenRef.current + " " + snapshot;
+        }
+      }
+      lastSeenRef.current = newTotal;
+      setTranscript(newTotal);
       setInterimTranscript(interimText);
     };
 
@@ -158,13 +176,20 @@ export function useSTT() {
     };
 
     r.onend = () => {
-      // 자동 재시작 없음. listening=false 로 종료.
-      setListening(false);
+      // 사용자가 stop() 한 게 아니면 자동 재시작 → 침묵 후에도 실시간 인식 유지
+      if (restartingRef.current) {
+        try {
+          r.start();
+        } catch {}
+      } else {
+        setListening(false);
+      }
     };
 
     recognitionRef.current = r;
 
     return () => {
+      restartingRef.current = false;
       try {
         r.stop();
       } catch {}
@@ -175,6 +200,8 @@ export function useSTT() {
     setError("");
     setTranscript("");
     setInterimTranscript("");
+    lastSeenRef.current = "";
+    restartingRef.current = true;
     try {
       recognitionRef.current?.start();
       setListening(true);
@@ -184,6 +211,7 @@ export function useSTT() {
   };
 
   const stop = () => {
+    restartingRef.current = false;
     try {
       recognitionRef.current?.stop();
     } catch {}
@@ -193,6 +221,7 @@ export function useSTT() {
   const reset = () => {
     setTranscript("");
     setInterimTranscript("");
+    lastSeenRef.current = "";
   };
 
   return { listening, transcript, interimTranscript, error, start, stop, reset };

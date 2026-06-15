@@ -53,19 +53,21 @@ export default function StudySession({
   const [translation, setTranslation] = useState<string>("");
   const [translating, setTranslating] = useState(false);
   const [timeLeft, setTimeLeft] = useState(60);
+  // 답변 세션 상태 (STT listening 과는 별개) — 60초 타이머는 이 상태에 묶임
+  // STT 는 자동 재시작으로 침묵 후에도 실시간 인식 계속됨
+  const [answering, setAnswering] = useState(false);
   const autoSubmitRef = useRef(false);
   const editedAnswerRef = useRef("");
-  // 마이크 시작 시점의 기존 답변(STT는 매번 새 세션으로 시작하지만,
-  // 이전까지의 답변은 보존해서 새 음성 결과를 그 위에 이어붙임)
   const baseAnswerRef = useRef("");
 
-  const startSTT = () => {
-    // 현재 답변을 base 로 고정 → 새 STT 결과는 base 뒤에 붙음
+  const startAnswering = () => {
     baseAnswerRef.current = editedAnswer.trim();
+    setAnswering(true);
     startSTTRaw();
   };
 
-  const stopSTT = () => {
+  const stopAnsweringOnly = () => {
+    setAnswering(false);
     stopSTTRaw();
   };
 
@@ -82,8 +84,9 @@ export default function StudySession({
     }
   }, [transcript, interimTranscript, listening]);
 
+  // 60초 타이머는 answering 에만 묶임 → STT 가 침묵으로 잠시 꺼져도 타이머는 계속
   useEffect(() => {
-    if (!listening) return;
+    if (!answering) return;
     setTimeLeft(60);
     autoSubmitRef.current = false;
     const id = setInterval(() => {
@@ -92,6 +95,7 @@ export default function StudySession({
           clearInterval(id);
           autoSubmitRef.current = true;
           stopSTTRaw();
+          setAnswering(false);
           return 0;
         }
         return t - 1;
@@ -99,7 +103,7 @@ export default function StudySession({
     }, 1000);
     return () => clearInterval(id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [listening]);
+  }, [answering]);
 
   const playQuestion = () => {
     const text = type === 4 && passageText ? passageText : question;
@@ -127,7 +131,8 @@ export default function StudySession({
 
   const submitAnswer = async () => {
     if (!editedAnswer.trim()) return;
-    await stopSTT();
+    stopSTTRaw();
+    setAnswering(false);
     setLoadingFeedback(true);
     setStep("feedback");
 
@@ -163,8 +168,10 @@ export default function StudySession({
   };
 
   useEffect(() => {
+    // 60초 만료 시에만 autoSubmitRef.current=true 가 되어 자동 제출됨.
+    // STT 가 침묵으로 잠시 꺼지는 건 무시 (auto-restart 로 다시 켜지므로)
     if (
-      !listening &&
+      !answering &&
       autoSubmitRef.current &&
       step === "answer" &&
       editedAnswerRef.current.trim()
@@ -174,7 +181,7 @@ export default function StudySession({
       return () => clearTimeout(id);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [listening, step]);
+  }, [answering, step]);
 
   const restart = () => {
     setStep("answer");
@@ -262,15 +269,15 @@ export default function StudySession({
             <div className="text-xs font-semibold text-teczen-red">YOUR ANSWER (실시간 인식)</div>
             <div className="flex gap-2">
               <Button
-                onClick={listening ? stopSTT : startSTT}
-                variant={listening ? "danger" : "primary"}
+                onClick={answering ? stopAnsweringOnly : startAnswering}
+                variant={answering ? "danger" : "primary"}
                 size="sm"
               >
-                {listening ? "■ 정지" : "🎤 음성 답변 시작"}
+                {answering ? "■ 음성 중지" : "🎤 음성 답변 시작"}
               </Button>
-              {listening && editedAnswer.trim() && (
+              {answering && editedAnswer.trim() && (
                 <Button onClick={submitAnswer} variant="primary" size="sm">
-                  ✓ 정지 + 채점받기
+                  ✓ 채점받기
                 </Button>
               )}
             </div>
@@ -282,12 +289,14 @@ export default function StudySession({
             </div>
           )}
 
-          {listening && (
+          {answering && (
             <div className="mb-3 rounded-xl border-2 border-teczen-red bg-teczen-red/5 p-4 min-h-[64px]">
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2">
-                  <span className="inline-block w-2.5 h-2.5 bg-teczen-red rounded-full animate-pulse" />
-                  <span className="text-xs font-bold text-teczen-red">실시간 인식 중...</span>
+                  <span className={`inline-block w-2.5 h-2.5 bg-teczen-red rounded-full ${listening ? "animate-pulse" : "opacity-50"}`} />
+                  <span className="text-xs font-bold text-teczen-red">
+                    {listening ? "실시간 인식 중..." : "음성 대기 중 — 계속 말하세요"}
+                  </span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <span className="text-xs text-teczen-gray-500">남은 시간</span>
@@ -311,7 +320,7 @@ export default function StudySession({
                 <span className="text-teczen-gray-400">{interimTranscript}</span>
                 {!transcript && !interimTranscript && (
                   <span className="text-teczen-gray-400 text-base">
-                    영어로 말해주세요. 1분 안에 답변을 마쳐주세요.
+                    영어로 말해주세요. 60초 안에 ✓ 채점받기 를 눌러주세요.
                   </span>
                 )}
               </p>
@@ -321,9 +330,12 @@ export default function StudySession({
           <textarea
             value={editedAnswer}
             onChange={(e) => setEditedAnswer(e.target.value)}
-            placeholder="🎤 버튼을 누르고 영어로 답변하거나, 직접 입력하세요."
+            placeholder="🎤 버튼을 누르고 영어로 답변하거나, 직접 입력하세요. 인식이 잘못된 단어는 여기서 직접 수정할 수 있어요."
             className="w-full min-h-[140px] border-2 border-teczen-gray-300 rounded-xl p-4 text-base leading-relaxed focus:outline-none focus:border-teczen-navy resize-y transition-colors"
           />
+          <p className="text-[11px] text-teczen-gray-500 mt-1">
+            💡 인식이 잘 안되는 단어는 위 텍스트 영역에서 직접 수정할 수 있어요.
+          </p>
           {editedAnswer && (
             <div className="text-xs text-teczen-gray-500 mt-1">
               {editedAnswer.trim().split(/\s+/).filter(Boolean).length} 단어 ·{" "}
