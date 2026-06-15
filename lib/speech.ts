@@ -53,7 +53,7 @@ export function useTTS() {
     const voice = pickEnglishVoice();
     if (!voice) {
       alert(
-        "이 컴퓨터에는 영어 음성이 설치되어 있지 않습니다.\n\nWindows: 설정 → 시간 및 언어 → 음성 → 음성 추가 → 'English (United States)' 다운로드\n\nChrome 브라우저 권장.",
+        "이 기기에는 영어 음성이 설치되어 있지 않습니다.\n\nWindows: 설정 → 시간 및 언어 → 음성 → 음성 추가 → 'English (United States)' 다운로드\n\nChrome 브라우저 권장.",
       );
       return;
     }
@@ -85,12 +85,16 @@ export function useSTT() {
   const [error, setError] = useState<string>("");
   const recognitionRef = useRef<any>(null);
   const restartingRef = useRef(false);
+  // 완료된 세션들의 누적 텍스트 (자동 재시작 시 보존)
+  const committedRef = useRef<string>("");
+  // 현재 세션의 최종 텍스트 스냅샷 (e.results 전체 순회로 계산)
+  const currentSessionRef = useRef<string>("");
 
   useEffect(() => {
     if (typeof window === "undefined") return;
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SR) {
-      setError("이 브라우저는 음성 인식을 지원하지 않습니다 (Chrome 권장)");
+      setError("이 브라우저는 음성 인식을 지원하지 않습니다 (Android Chrome 권장)");
       return;
     }
     const r = new SR();
@@ -99,10 +103,14 @@ export function useSTT() {
     r.interimResults = true;
     r.maxAlternatives = 1;
 
+    // 핵심 수정: e.resultIndex 누적 방식 대신 e.results 전체 스냅샷.
+    // 일부 모바일 브라우저(특히 Android Chrome/Samsung)가 results 를 부분적으로
+    // 재emit 하는 버그가 있어, "hello"가 여러 번 누적되는 현상 발생.
+    // 매 이벤트마다 results 전체에서 final/interim 을 새로 집계 → 항상 정확한 스냅샷.
     r.onresult = (e: any) => {
       let finalText = "";
       let interimText = "";
-      for (let i = e.resultIndex; i < e.results.length; i++) {
+      for (let i = 0; i < e.results.length; i++) {
         const res = e.results[i];
         if (res.isFinal) {
           finalText += res[0].transcript + " ";
@@ -110,7 +118,8 @@ export function useSTT() {
           interimText += res[0].transcript;
         }
       }
-      if (finalText) setTranscript((prev) => prev + finalText);
+      currentSessionRef.current = finalText;
+      setTranscript(committedRef.current + finalText);
       setInterimTranscript(interimText);
     };
 
@@ -127,6 +136,9 @@ export function useSTT() {
     };
 
     r.onend = () => {
+      // 종료 시 현재 세션 텍스트를 누적 버퍼로 커밋 → 다음 세션 시작해도 보존됨
+      committedRef.current += currentSessionRef.current;
+      currentSessionRef.current = "";
       if (restartingRef.current) {
         try {
           r.start();
@@ -150,6 +162,8 @@ export function useSTT() {
     setError("");
     setTranscript("");
     setInterimTranscript("");
+    committedRef.current = "";
+    currentSessionRef.current = "";
     restartingRef.current = true;
     try {
       recognitionRef.current?.start();
@@ -170,6 +184,8 @@ export function useSTT() {
   const reset = () => {
     setTranscript("");
     setInterimTranscript("");
+    committedRef.current = "";
+    currentSessionRef.current = "";
   };
 
   return { listening, transcript, interimTranscript, error, start, stop, reset };

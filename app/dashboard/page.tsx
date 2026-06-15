@@ -66,20 +66,20 @@ export default function DashboardPage() {
   return (
     <>
       <Header />
-      <main className="max-w-6xl mx-auto px-6 py-10">
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 py-6 md:py-10">
         <div className="mb-2 text-sm text-teczen-gray-500">
           안녕하세요, <span className="font-bold text-teczen-ink">{session.name}</span>님
         </div>
-        <div className="grid lg:grid-cols-[1fr_360px] gap-6 items-stretch mb-8">
+        <div className="grid lg:grid-cols-[1fr_360px] gap-4 md:gap-6 items-stretch mb-6 md:mb-8">
           <div className="flex flex-col gap-4">
             <div>
               <div className="flex items-start justify-between gap-3 mb-3 flex-wrap">
-                <h1 className="headline-xl text-teczen-ink">
+                <h1 className="headline-xl text-teczen-ink flex-1 min-w-0">
                   언제 어디서든,
                   <br />
                   <span className="highlight-blue">목표 등급</span>까지.
                 </h1>
-                <div className="flex flex-col gap-2 shrink-0">
+                <div className="flex flex-col gap-2 shrink-0 w-full sm:w-auto">
                   <a
                     href="/api/assets?key=api-key-guide"
                     target="_blank"
@@ -382,13 +382,13 @@ function FlameSection({
   return (
     <div
       className={`bg-white rounded-2xl border border-teczen-gray-200 ${
-        compact ? "p-6 h-full" : "p-6 md:p-8"
+        compact ? "p-4 sm:p-6 h-full" : "p-6 md:p-8"
       }`}
     >
       <div
         className={
           compact
-            ? "grid grid-cols-[130px_1fr] gap-5 items-center h-full"
+            ? "grid grid-cols-[100px_1fr] sm:grid-cols-[130px_1fr] gap-3 sm:gap-5 items-center h-full"
             : "grid md:grid-cols-[160px_1fr_auto] gap-6 items-center"
         }
       >
@@ -805,12 +805,12 @@ function MetricCard({
     gray: "text-teczen-gray-700",
   };
   return (
-    <div className="bg-white border border-teczen-gray-200 rounded-2xl p-5">
-      <div className="text-xs font-bold text-teczen-gray-500 uppercase tracking-wider mb-2">
+    <div className="bg-white border border-teczen-gray-200 rounded-2xl p-4 sm:p-5">
+      <div className="text-[10px] sm:text-xs font-bold text-teczen-gray-500 uppercase tracking-wider mb-1 sm:mb-2">
         {label}
       </div>
-      <div className={`font-black text-4xl ${colors[accent]} mb-1`}>{value}</div>
-      <div className="text-xs text-teczen-gray-500">{sub}</div>
+      <div className={`font-black text-3xl sm:text-4xl ${colors[accent]} mb-1`}>{value}</div>
+      <div className="text-[10px] sm:text-xs text-teczen-gray-500 truncate">{sub}</div>
     </div>
   );
 }

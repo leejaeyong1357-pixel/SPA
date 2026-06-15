@@ -30,7 +30,13 @@ body {
   font-weight: 800;
   letter-spacing: -0.04em;
   line-height: 1.1;
-  font-size: 2.5rem;
+  font-size: 1.875rem;
+}
+
+@media (min-width: 640px) {
+  .headline-xl {
+    font-size: 2.5rem;
+  }
 }
 
 @media (min-width: 768px) {
