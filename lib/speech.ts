@@ -111,17 +111,37 @@ export function useSTT() {
     r.maxAlternatives = 1;
 
     r.onresult = (e: any) => {
-      let finalText = "";
+      // ⚠️ Android Chrome / 일부 모바일 브라우저 버그 우회:
+      // 단어가 늘어날 때마다 새 final 결과를 추가함 → e.results 안에
+      //   [final "hello", final "hello this", final "hello this is", ...]
+      // 형태로 동일 prefix 가 반복됨. 그대로 concat 하면
+      //   "hello hello this hello this is ..." 처럼 누적됨.
+      // → prefix 가 겹치는 result 는 더 긴 것만 남기고 중복 제거.
+      const finalParts: string[] = [];
       let interimText = "";
       for (let i = 0; i < e.results.length; i++) {
         const res = e.results[i];
         if (res.isFinal) {
-          finalText += res[0].transcript + " ";
+          const t = res[0].transcript.trim();
+          if (!t) continue;
+          if (finalParts.length > 0) {
+            const last = finalParts[finalParts.length - 1];
+            const lastL = last.toLowerCase();
+            const curL = t.toLowerCase();
+            if (lastL === curL) continue; // 완전 중복 → 건너뜀
+            if (curL.startsWith(lastL)) {
+              finalParts[finalParts.length - 1] = t; // 새 결과가 이전 결과를 확장 → 교체
+              continue;
+            }
+            if (lastL.startsWith(curL)) continue; // 새 결과가 이전 결과의 prefix → 건너뜀
+          }
+          finalParts.push(t);
         } else {
           interimText += res[0].transcript;
         }
       }
-      setTranscript(finalText.trim());
+      const finalText = finalParts.join(" ");
+      setTranscript(finalText);
       setInterimTranscript(interimText);
     };
 
