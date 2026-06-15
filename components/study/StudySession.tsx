@@ -44,14 +44,6 @@ export default function StudySession({
     reset: resetSTT,
   } = useSTT();
 
-  const startSTT = () => {
-    startSTTRaw();
-  };
-
-  const stopSTT = () => {
-    stopSTTRaw();
-  };
-
   const [step, setStep] = useState<"intro" | "answer" | "feedback">("intro");
   const [editedAnswer, setEditedAnswer] = useState("");
   const [feedback, setFeedback] = useState<AiFeedback | null>(null);
@@ -63,6 +55,19 @@ export default function StudySession({
   const [timeLeft, setTimeLeft] = useState(60);
   const autoSubmitRef = useRef(false);
   const editedAnswerRef = useRef("");
+  // 마이크 시작 시점의 기존 답변(STT는 매번 새 세션으로 시작하지만,
+  // 이전까지의 답변은 보존해서 새 음성 결과를 그 위에 이어붙임)
+  const baseAnswerRef = useRef("");
+
+  const startSTT = () => {
+    // 현재 답변을 base 로 고정 → 새 STT 결과는 base 뒤에 붙음
+    baseAnswerRef.current = editedAnswer.trim();
+    startSTTRaw();
+  };
+
+  const stopSTT = () => {
+    stopSTTRaw();
+  };
 
   useEffect(() => {
     editedAnswerRef.current = editedAnswer;
@@ -70,7 +75,10 @@ export default function StudySession({
 
   useEffect(() => {
     if (listening) {
-      setEditedAnswer((transcript + " " + interimTranscript).trim());
+      const live = (transcript + " " + interimTranscript).trim();
+      const base = baseAnswerRef.current;
+      const combined = base ? (live ? base + " " + live : base) : live;
+      setEditedAnswer(combined);
     }
   }, [transcript, interimTranscript, listening]);
 

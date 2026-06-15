@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import { useTTS, useSTT } from "@/lib/speech";
@@ -33,8 +33,14 @@ export default function MockExamPage() {
   const [phase, setPhase] = useState<"intro" | "answering" | "scoring" | "done">("intro");
   const [startedAt, setStartedAt] = useState(0);
   const { speak, stop: stopTTS, speaking } = useTTS();
-  const { listening, transcript, interimTranscript, start: startSTT, stop: stopSTT, reset: resetSTT } = useSTT();
+  const { listening, transcript, interimTranscript, start: startSTTRaw, stop: stopSTT, reset: resetSTT } = useSTT();
   const [editedAnswer, setEditedAnswer] = useState("");
+  const baseAnswerRef = useRef("");
+
+  const startSTT = () => {
+    baseAnswerRef.current = editedAnswer.trim();
+    startSTTRaw();
+  };
 
   const exam = mockExams.exams.find((e: any) => e.id === id);
 
@@ -43,8 +49,12 @@ export default function MockExamPage() {
   }, [router]);
 
   useEffect(() => {
-    setEditedAnswer((transcript + " " + interimTranscript).trim());
-  }, [transcript, interimTranscript]);
+    if (!listening) return;
+    const live = (transcript + " " + interimTranscript).trim();
+    const base = baseAnswerRef.current;
+    const combined = base ? (live ? base + " " + live : base) : live;
+    setEditedAnswer(combined);
+  }, [transcript, interimTranscript, listening]);
 
   if (!exam) {
     return (

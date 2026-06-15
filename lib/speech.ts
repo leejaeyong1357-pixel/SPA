@@ -78,17 +78,24 @@ export function useTTS() {
   return { speak, stop, speaking, voices, hasEnglishVoice };
 }
 
+/**
+ * Web Speech API 음성 인식 훅.
+ *
+ * ⚠️ 주의: 자동 재시작 안 함.
+ *   - 일부 모바일 브라우저(Android Chrome 등)는 stop() 후 start() 해도 e.results 가 초기화되지
+ *     않고 이전 세션 결과가 그대로 남는 버그가 있음. 자동 재시작 + 결과 누적 시 같은 단어가
+ *     반복 누적되는 'hello hello hello...' 현상 발생.
+ *   - 대신 매 세션을 독립적으로 처리하고, 상위 컴포넌트(StudySession)가 base 답변 위에
+ *     새 세션 결과를 이어붙이는 방식으로 처리.
+ *
+ * transcript 는 매 onresult 마다 e.results 전체 스냅샷으로 재계산 → 중복 없음.
+ */
 export function useSTT() {
   const [listening, setListening] = useState(false);
   const [transcript, setTranscript] = useState("");
   const [interimTranscript, setInterimTranscript] = useState("");
   const [error, setError] = useState<string>("");
   const recognitionRef = useRef<any>(null);
-  const restartingRef = useRef(false);
-  // 완료된 세션들의 누적 텍스트 (자동 재시작 시 보존)
-  const committedRef = useRef<string>("");
-  // 현재 세션의 최종 텍스트 스냅샷 (e.results 전체 순회로 계산)
-  const currentSessionRef = useRef<string>("");
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -103,10 +110,6 @@ export function useSTT() {
     r.interimResults = true;
     r.maxAlternatives = 1;
 
-    // 핵심 수정: e.resultIndex 누적 방식 대신 e.results 전체 스냅샷.
-    // 일부 모바일 브라우저(특히 Android Chrome/Samsung)가 results 를 부분적으로
-    // 재emit 하는 버그가 있어, "hello"가 여러 번 누적되는 현상 발생.
-    // 매 이벤트마다 results 전체에서 final/interim 을 새로 집계 → 항상 정확한 스냅샷.
     r.onresult = (e: any) => {
       let finalText = "";
       let interimText = "";
@@ -118,8 +121,7 @@ export function useSTT() {
           interimText += res[0].transcript;
         }
       }
-      currentSessionRef.current = finalText;
-      setTranscript(committedRef.current + finalText);
+      setTranscript(finalText.trim());
       setInterimTranscript(interimText);
     };
 
@@ -136,22 +138,13 @@ export function useSTT() {
     };
 
     r.onend = () => {
-      // 종료 시 현재 세션 텍스트를 누적 버퍼로 커밋 → 다음 세션 시작해도 보존됨
-      committedRef.current += currentSessionRef.current;
-      currentSessionRef.current = "";
-      if (restartingRef.current) {
-        try {
-          r.start();
-        } catch {}
-      } else {
-        setListening(false);
-      }
+      // 자동 재시작 없음. listening=false 로 종료.
+      setListening(false);
     };
 
     recognitionRef.current = r;
 
     return () => {
-      restartingRef.current = false;
       try {
         r.stop();
       } catch {}
@@ -162,9 +155,6 @@ export function useSTT() {
     setError("");
     setTranscript("");
     setInterimTranscript("");
-    committedRef.current = "";
-    currentSessionRef.current = "";
-    restartingRef.current = true;
     try {
       recognitionRef.current?.start();
       setListening(true);
@@ -174,7 +164,6 @@ export function useSTT() {
   };
 
   const stop = () => {
-    restartingRef.current = false;
     try {
       recognitionRef.current?.stop();
     } catch {}
@@ -184,8 +173,6 @@ export function useSTT() {
   const reset = () => {
     setTranscript("");
     setInterimTranscript("");
-    committedRef.current = "";
-    currentSessionRef.current = "";
   };
 
   return { listening, transcript, interimTranscript, error, start, stop, reset };
