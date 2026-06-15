@@ -15,6 +15,7 @@ import Flame from "@/components/Flame";
 import Roadmap from "@/components/dashboard/Roadmap";
 import AppLaunchPopup from "@/components/dashboard/AppLaunchPopup";
 import SampleResultModal from "@/components/dashboard/SampleResultModal";
+import ExamScheduleCard from "@/components/dashboard/ExamScheduleCard";
 import type1 from "@/data/type1_business_casual.json";
 import type2 from "@/data/type2_opinion.json";
 import type3 from "@/data/type3_visual.json";
@@ -136,11 +137,13 @@ export default function DashboardPage() {
 
         {activeTab === "home" && (
           <div className="space-y-6">
+            <ExamScheduleCard />
+
             <div className="grid md:grid-cols-3 gap-4">
               <MetricCard
                 label="시험까지"
                 value={dDay >= 0 ? `D-${dDay}` : "—"}
-                sub={settings.examDate}
+                sub={settings.examDate || "시험일 미정"}
                 accent="red"
               />
               <MetricCard
