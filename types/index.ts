@@ -63,6 +63,51 @@ export const CRITERIA_MAX = {
   fluency: 12,
 } as const;
 
+export type CriteriaKey = keyof ScoreCriteria;
+
+/** 영역별(발음/청취·답변/어휘/문법/유창성) 세부 분석 */
+export interface AreaAnalysis {
+  summary: string;
+  strengths: string[];
+  improvements: string[];
+}
+
+/** 세부 피드백 항목 — 영역별 탭에 노출 */
+export interface DetailTip {
+  area: CriteriaKey;
+  label: string;
+  text: string;
+  example?: string;
+}
+
+/** 고급 어휘·표현 제안 그룹 */
+export interface VocabGroup {
+  title: string;
+  items: string[];
+}
+
+/** 추천 학습 액션 (진행률 표시용) */
+export interface LearningAction {
+  label: string;
+  target: number;
+  unit: string;
+}
+
+/** 발화 내용 구성 비율 */
+export interface ContentSlice {
+  label: string;
+  percent: number;
+}
+
+/** 클라이언트에서 계산하는 발화 지표 (AI 호출 없이 측정 가능한 값) */
+export interface SpeakingMetrics {
+  responseSec?: number;
+  speakingSec?: number;
+  wordCount: number;
+  sentenceCount: number;
+  repeatedWords: number;
+}
+
 export interface AiFeedback {
   grammarIssues: string[];
   vocabularySuggestions: string[];
@@ -73,6 +118,17 @@ export interface AiFeedback {
   strengths: string[];
   improvements: string[];
   criteria?: ScoreCriteria;
+
+  // ── 확장 리포트용 필드 (AI 응답에 없으면 로컬 폴백으로 채움) ──
+  summaryComment?: string;
+  overallComment?: string;
+  areas?: Partial<Record<CriteriaKey, AreaAnalysis>>;
+  detailTips?: DetailTip[];
+  vocabularyGroups?: VocabGroup[];
+  learningActions?: LearningAction[];
+  contentBreakdown?: ContentSlice[];
+  topicRelevance?: number;
+  confidence?: number;
 }
 
 export interface VocabEntry {

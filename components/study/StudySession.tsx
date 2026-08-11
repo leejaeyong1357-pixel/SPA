@@ -6,7 +6,7 @@ import { storage } from "@/lib/storage";
 import { pushFlame } from "@/lib/flameSync";
 import { pushUserToServer } from "@/lib/userSync";
 import { getFeedback, translateText } from "@/lib/hchat";
-import type { AiFeedback, QuestionType } from "@/types";
+import type { AiFeedback, QuestionType, SpeakingMetrics } from "@/types";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import FeedbackPanel from "./FeedbackPanel";
@@ -59,9 +59,15 @@ export default function StudySession({
   const autoSubmitRef = useRef(false);
   const editedAnswerRef = useRef("");
   const baseAnswerRef = useRef("");
+  // 발화 지표 측정용 — 답변 시작 시각 / 첫 발화 시각
+  const answerStartRef = useRef(0);
+  const firstWordRef = useRef(0);
+  const [metrics, setMetrics] = useState<SpeakingMetrics | undefined>();
 
   const startAnswering = () => {
     baseAnswerRef.current = editedAnswer.trim();
+    answerStartRef.current = Date.now();
+    firstWordRef.current = 0;
     setAnswering(true);
     startSTTRaw();
   };
@@ -78,6 +84,10 @@ export default function StudySession({
   useEffect(() => {
     if (listening) {
       const live = (transcript + " " + interimTranscript).trim();
+      // 첫 인식 단어가 나온 시점 기록 (응답 시간 산출용)
+      if (live && !firstWordRef.current && answerStartRef.current) {
+        firstWordRef.current = Date.now();
+      }
       const base = baseAnswerRef.current;
       const combined = base ? (live ? base + " " + live : base) : live;
       setEditedAnswer(combined);
@@ -133,6 +143,22 @@ export default function StudySession({
     if (!editedAnswer.trim()) return;
     stopSTTRaw();
     setAnswering(false);
+
+    // 발화 지표 확정 (음성으로 답한 경우에만 시간 지표가 의미 있음)
+    const words = editedAnswer.trim().split(/\s+/).filter(Boolean);
+    if (answerStartRef.current) {
+      const elapsed = (Date.now() - answerStartRef.current) / 1000;
+      setMetrics({
+        responseSec: firstWordRef.current
+          ? (firstWordRef.current - answerStartRef.current) / 1000
+          : undefined,
+        speakingSec: Math.min(60, elapsed),
+        wordCount: words.length,
+        sentenceCount: editedAnswer.split(/[.!?]+/).filter((s) => s.trim()).length,
+        repeatedWords: 0,
+      });
+    }
+
     setLoadingFeedback(true);
     setStep("feedback");
 
@@ -366,6 +392,7 @@ export default function StudySession({
           userAnswer={editedAnswer}
           sampleAnswer={sampleAnswer}
           onRestart={restart}
+          metrics={metrics}
         />
       )}
     </div>
