@@ -284,8 +284,11 @@ export default function StudySession({
           </div>
 
           {sttError && (
-            <div className="mb-3 text-xs text-teczen-red bg-teczen-red/5 p-2 rounded">
-              {sttError}
+            <div className="mb-3 p-3 bg-teczen-red/5 border-l-4 border-teczen-red rounded-r-xl">
+              <div className="text-xs font-bold text-teczen-red mb-1">
+                🎤 음성 인식을 사용할 수 없습니다
+              </div>
+              <div className="text-xs text-teczen-ink leading-relaxed">{sttError}</div>
             </div>
           )}
 

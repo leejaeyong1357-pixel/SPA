@@ -164,14 +164,27 @@ export function useSTT() {
     };
 
     r.onerror = (e: any) => {
+      // no-speech / aborted 는 정상 흐름(침묵, 재시작)이라 무시
       if (e.error === "no-speech" || e.error === "aborted") {
         return;
       }
+      // 브라우저 음성 인식은 오디오를 외부 음성 서버로 보내 처리함.
+      // 사내망에서 해당 도메인이 차단되면 network 오류가 발생 → 안내 필요.
+      const messages: Record<string, string> = {
+        "not-allowed":
+          "마이크 권한이 차단되었습니다. 주소창 자물쇠(🔒) → 마이크 → '허용' 으로 변경 후 새로고침해주세요.",
+        "service-not-allowed":
+          "브라우저가 음성 인식 서비스를 차단했습니다. Chrome 설정 → 개인정보 및 보안 → 사이트 설정 → 마이크 확인이 필요합니다.",
+        network:
+          "음성 인식 서버에 연결할 수 없습니다. 사내망 방화벽이 음성 서비스를 차단하고 있을 수 있어요. 답변은 아래 입력창에 직접 작성하셔도 채점됩니다.",
+        "audio-capture":
+          "마이크 장치를 찾을 수 없습니다. 마이크가 연결되어 있는지 확인해주세요.",
+      };
       setError(
-        e.error === "not-allowed"
-          ? "마이크 권한이 차단되었습니다. 주소창 자물쇠 → 마이크 허용"
-          : `음성 인식 오류: ${e.error}`,
+        messages[e.error] ||
+          `음성 인식 오류(${e.error}) — 답변은 아래 입력창에 직접 작성하셔도 채점됩니다.`,
       );
+      restartingRef.current = false;
       setListening(false);
     };
 
