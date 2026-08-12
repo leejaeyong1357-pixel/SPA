@@ -89,10 +89,14 @@ export async function pullUserFromServer(employeeId: string): Promise<ServerUser
  * 내 settings + 비번 해시를 서버(KV)에 올림. 실패해도 조용히 무시.
  * 호출 시점: 설정 저장 후, 비번 등록 후.
  */
+/** 시연용 데모 계정 — 관리자 통계·랭킹 집계에서 제외 */
+export const DEMO_EMPLOYEE_ID = "teczen";
+
 export async function pushUserToServer(): Promise<void> {
   try {
     const session = storage.getSession();
     if (!session || session.isAdmin) return;
+    if (session.employeeId === DEMO_EMPLOYEE_ID) return;
 
     const settings = storage.getSettings();
     const records = storage.getRecords();

@@ -26,6 +26,12 @@ const ADMINS: Array<{ idH: string; pwH: string; name: string }> = [
   },
 ];
 
+// 시연·보고용 데모 계정 (teczen / 20240201!).
+// 사내 임직원 명부(employees.json) 검증을 건너뛰고 학습자 화면을 그대로 체험할 수 있게 함.
+// 관리자 통계·랭킹에는 집계되지 않도록 userSync 에서 별도 제외 처리됨.
+const DEMO_EMPLOYEE_ID = "teczen";
+const DEMO_PW_H = "41de1e70bdf4c6f419f53b6a1f2332ede5612e4c54d3b71d0b10308df1e9becb";
+
 async function sha256Hex(s: string): Promise<string> {
   const enc = new TextEncoder().encode(s);
   const buf = await crypto.subtle.digest("SHA-256", enc);
@@ -63,6 +69,34 @@ export default function LoginPage() {
 
     const trimmedId = employeeId.trim();
     const trimmedName = name.trim();
+
+    // ── 데모 계정: 이름 없이 아이디(teczen) + 비밀번호만으로 로그인 ──
+    if (trimmedId.toLowerCase() === DEMO_EMPLOYEE_ID) {
+      if (!userPw) {
+        setError("비밀번호를 입력해주세요.");
+        return;
+      }
+      setLoading(true);
+      const h = await sha256Hex(userPw);
+      if (h !== DEMO_PW_H) {
+        setLoading(false);
+        setError("데모 계정 비밀번호가 일치하지 않습니다.");
+        return;
+      }
+      storage.saveSession({
+        name: trimmedName || "데모 사용자",
+        employeeId: DEMO_EMPLOYEE_ID,
+        rrnFront: "",
+        team: "미래성장팀",
+        position: "데모",
+        loggedInAt: Date.now(),
+        isAdmin: false,
+      });
+      setLoading(false);
+      navigateAfterLogin();
+      return;
+    }
+
     if (!trimmedName || !trimmedId) {
       setError("이름과 사번을 입력해주세요.");
       return;
