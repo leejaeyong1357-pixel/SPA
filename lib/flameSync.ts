@@ -18,9 +18,9 @@ export async function pushFlame(): Promise<void> {
   try {
     const session = storage.getSession();
     const settings = storage.getSettings();
-    // 데모 계정(teczen)은 공용 랭킹에 노출되지 않도록 제외
+    // 데모 계정(wia1234)은 공용 랭킹에 노출되지 않도록 제외
     if (!session || session.isAdmin || !settings.flame) return;
-    if (session.employeeId === "teczen") return;
+    if (session.employeeId === "wia1234") return;
 
     const f = decayedFlame(settings.flame);
     if (f.level <= 0) return;

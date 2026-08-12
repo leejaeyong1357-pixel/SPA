@@ -90,7 +90,7 @@ export async function pullUserFromServer(employeeId: string): Promise<ServerUser
  * 호출 시점: 설정 저장 후, 비번 등록 후.
  */
 /** 시연용 데모 계정 — 관리자 통계·랭킹 집계에서 제외 */
-export const DEMO_EMPLOYEE_ID = "teczen";
+export const DEMO_EMPLOYEE_ID = "wia1234";
 
 export async function pushUserToServer(): Promise<void> {
   try {

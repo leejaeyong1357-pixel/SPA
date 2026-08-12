@@ -26,11 +26,15 @@ const ADMINS: Array<{ idH: string; pwH: string; name: string }> = [
   },
 ];
 
-// 시연·보고용 데모 계정 (teczen / 20240201!).
+// 시연·보고용 데모 계정 (wia1234 / wia1234).
 // 사내 임직원 명부(employees.json) 검증을 건너뛰고 학습자 화면을 그대로 체험할 수 있게 함.
-// 관리자 통계·랭킹에는 집계되지 않도록 userSync 에서 별도 제외 처리됨.
-const DEMO_EMPLOYEE_ID = "teczen";
-const DEMO_PW_H = "41de1e70bdf4c6f419f53b6a1f2332ede5612e4c54d3b71d0b10308df1e9becb";
+// 관리자 권한은 없으며(학습자 기능만), 관리자 통계·불꽃 랭킹 집계에서도 제외됨.
+const DEMO_ID = "wia1234";
+// 공백 유무 혼동을 방지하기 위해 "wia1234" 와 "wia 1234" 둘 다 허용
+const DEMO_PW_HASHES = [
+  "7f452c7c32715b611deb2366c52c33cf5043d637b080e311018e8048bfb04a82", // wia1234
+  "e6b4f09ee16f239b62689e5eb7267683d3d52e1db4f963acd15f8dc11180854f", // wia 1234
+];
 
 async function sha256Hex(s: string): Promise<string> {
   const enc = new TextEncoder().encode(s);
@@ -42,13 +46,26 @@ async function sha256Hex(s: string): Promise<string> {
 
 export default function LoginPage() {
   const router = useRouter();
-  const [mode, setMode] = useState<"user" | "admin">("user");
+  const [mode, setMode] = useState<"user" | "admin" | "demo">("user");
   const [name, setName] = useState("");
   const [employeeId, setEmployeeId] = useState("");
   const [userPw, setUserPw] = useState("");
   const [adminPw, setAdminPw] = useState("");
+  const [demoId, setDemoId] = useState("");
+  const [demoPw, setDemoPw] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const switchMode = (m: "user" | "admin" | "demo") => {
+    setMode(m);
+    setError("");
+    setName("");
+    setEmployeeId("");
+    setUserPw("");
+    setAdminPw("");
+    setDemoId("");
+    setDemoPw("");
+  };
 
   const navigateAfterLogin = () => {
     const settings = storage.getSettings();
@@ -69,33 +86,6 @@ export default function LoginPage() {
 
     const trimmedId = employeeId.trim();
     const trimmedName = name.trim();
-
-    // ── 데모 계정: 이름 없이 아이디(teczen) + 비밀번호만으로 로그인 ──
-    if (trimmedId.toLowerCase() === DEMO_EMPLOYEE_ID) {
-      if (!userPw) {
-        setError("비밀번호를 입력해주세요.");
-        return;
-      }
-      setLoading(true);
-      const h = await sha256Hex(userPw);
-      if (h !== DEMO_PW_H) {
-        setLoading(false);
-        setError("데모 계정 비밀번호가 일치하지 않습니다.");
-        return;
-      }
-      storage.saveSession({
-        name: trimmedName || "데모 사용자",
-        employeeId: DEMO_EMPLOYEE_ID,
-        rrnFront: "",
-        team: "미래성장팀",
-        position: "데모",
-        loggedInAt: Date.now(),
-        isAdmin: false,
-      });
-      setLoading(false);
-      navigateAfterLogin();
-      return;
-    }
 
     if (!trimmedName || !trimmedId) {
       setError("이름과 사번을 입력해주세요.");
@@ -171,6 +161,38 @@ export default function LoginPage() {
     }
   };
 
+  /** 데모 로그인 — 아이디 + 비밀번호만. 학습자 기능만 제공(관리자 권한 없음). */
+  const handleDemoLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+
+    const id = demoId.trim().toLowerCase();
+    if (!id || !demoPw) {
+      setError("아이디와 비밀번호를 입력해주세요.");
+      return;
+    }
+
+    setLoading(true);
+    const h = await sha256Hex(demoPw);
+    if (id !== DEMO_ID || !DEMO_PW_HASHES.includes(h)) {
+      setLoading(false);
+      setError("데모 계정 정보가 일치하지 않습니다.");
+      return;
+    }
+
+    storage.saveSession({
+      name: "데모 사용자",
+      employeeId: DEMO_ID,
+      rrnFront: "",
+      team: "미래성장팀",
+      position: "데모",
+      loggedInAt: Date.now(),
+      isAdmin: false, // 관리자 기능 없음 — 학습자 화면만
+    });
+    setLoading(false);
+    navigateAfterLogin();
+  };
+
   const handleAdminLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
@@ -217,41 +239,99 @@ export default function LoginPage() {
           />
           <h1 className="font-brand text-3xl text-teczen-navy mb-1">SPEAKZEN</h1>
           <p className="text-sm text-teczen-gray-600">
-            {mode === "user" ? "이름·사번·비밀번호로 로그인하세요" : "관리자 인증"}
+            {mode === "user"
+              ? "이름·사번·비밀번호로 로그인하세요"
+              : mode === "admin"
+              ? "관리자 인증"
+              : "아이디·비밀번호로 체험하세요"}
           </p>
         </div>
 
         <div className="flex bg-teczen-gray-100 rounded-full p-1 mb-4">
-          <button
-            type="button"
-            onClick={() => {
-              setMode("user");
-              setError("");
-            }}
-            className={`flex-1 py-2 text-sm font-bold rounded-full transition-all ${
-              mode === "user" ? "bg-white text-teczen-navy shadow-sm" : "text-teczen-gray-500"
-            }`}
-          >
-            일반 로그인
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setMode("admin");
-              setError("");
-              setName("");
-              setEmployeeId("");
-              setUserPw("");
-            }}
-            className={`flex-1 py-2 text-sm font-bold rounded-full transition-all ${
-              mode === "admin" ? "bg-white text-teczen-navy shadow-sm" : "text-teczen-gray-500"
-            }`}
-          >
-            🔐 관리자
-          </button>
+          {(
+            [
+              { id: "user", label: "이용자" },
+              { id: "admin", label: "🔐 관리자" },
+              { id: "demo", label: "🎬 데모" },
+            ] as const
+          ).map((m) => (
+            <button
+              key={m.id}
+              type="button"
+              onClick={() => switchMode(m.id)}
+              className={`flex-1 py-2 text-sm font-bold rounded-full transition-all ${
+                mode === m.id
+                  ? "bg-white text-teczen-navy shadow-sm"
+                  : "text-teczen-gray-500"
+              }`}
+            >
+              {m.label}
+            </button>
+          ))}
         </div>
 
-        {mode === "user" ? (
+        {mode === "demo" ? (
+          <form
+            onSubmit={handleDemoLogin}
+            className="bg-white rounded-3xl border-2 border-teczen-blue/30 shadow-sm p-8 space-y-5"
+          >
+            <div className="text-center pb-1">
+              <div className="text-3xl mb-1">🎬</div>
+              <div className="font-bold text-teczen-ink">데모 체험 계정</div>
+              <div className="text-xs text-teczen-gray-500 mt-1">
+                학습자 기능을 그대로 체험할 수 있어요
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-teczen-gray-700 mb-1.5">
+                아이디
+              </label>
+              <input
+                type="text"
+                value={demoId}
+                onChange={(e) => setDemoId(e.target.value)}
+                placeholder="데모 아이디"
+                autoCapitalize="none"
+                autoCorrect="off"
+                spellCheck={false}
+                className="w-full border-2 border-teczen-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-teczen-blue transition-colors"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-teczen-gray-700 mb-1.5">
+                비밀번호
+              </label>
+              <input
+                type="password"
+                value={demoPw}
+                onChange={(e) => setDemoPw(e.target.value)}
+                placeholder="••••••••"
+                autoCapitalize="none"
+                autoCorrect="off"
+                spellCheck={false}
+                className="w-full border-2 border-teczen-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-teczen-blue transition-colors"
+              />
+            </div>
+
+            {error && (
+              <div className="text-sm text-teczen-red bg-teczen-red/5 border border-teczen-red/20 p-3 rounded-xl">
+                {error}
+              </div>
+            )}
+
+            <Button type="submit" fullWidth disabled={loading} size="lg">
+              {loading ? "확인 중..." : "데모 체험 시작 →"}
+            </Button>
+
+            <div className="text-center text-[11px] text-teczen-gray-500 leading-relaxed">
+              데모 계정은 학습자 기능만 제공하며,
+              <br />
+              학습 통계·불꽃 랭킹에는 집계되지 않습니다.
+            </div>
+          </form>
+        ) : mode === "user" ? (
           <form onSubmit={handleUserLogin} className="bg-white rounded-3xl border border-teczen-gray-200 shadow-sm p-8 space-y-5">
             <div>
               <label className="block text-xs font-bold text-teczen-gray-700 mb-1.5">이름</label>
